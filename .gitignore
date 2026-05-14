@@ -1,0 +1,15 @@
+# Root gitignore for sprint 3
+**/target/
+**/bin/
+**/node_modules/
+**/.settings/
+**/.project/
+**/.classpath/
+**/.factorypath
+**/.idea/
+**/.vscode/
+*.class
+*.jar
+*.war
+*.ear
+*.log

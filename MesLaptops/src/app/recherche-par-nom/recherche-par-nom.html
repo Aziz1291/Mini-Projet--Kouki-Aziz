@@ -1,0 +1,59 @@
+<div class="container">
+<!--
+    <form class="form-inline">
+        <div class="form-group mx-sm-3 mb-2 mt-2 ">
+            <label>Marque Laptop</label>
+            <input type="text" class="form-control" [(ngModel)]="nomLaptop" name="nomLaptop" class="form-control">
+            <button type="submit" (click)="rechercherLaptops()" class="btn btn-primary mb-2 ml-2">Rechercher</button>
+        </div>
+    </form> -->
+
+<!--  <form class="form-inline">
+        <div class="form-group mx-sm-3 mb-2 mt-2 ">
+            <label>Marque Laptop en tapant</label>
+            <input class="form-control" #searchInput (keyup)="onKeyUp(searchInput.value)">
+        </div>
+    </form> -->
+
+    <form class="form-inline">
+        <div class="form-group mx-sm-3 mb-2 mt-2 ">
+            <label>Marque Laptop en tapant</label>
+            <input #nom [(ngModel)]="searchTerm" name="searchTerm" class="form-control">
+        </div>
+    </form>
+
+
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <table class="table table-striped">
+                <tr>
+                    <th>Id</th>
+                    <th>Marque</th>
+                    <th>Prix</th>
+                    <th>Caractéristiques</th>
+                    <th>Date Création</th>
+                    <th>Modèle</th>
+                </tr>
+                @for (laptop of laptops | searchFilter: searchTerm ; track laptop.idLaptop)
+                {
+                <tbody>
+                    <tr>
+                        <td>{{laptop.idLaptop}}</td>
+                        <td>{{laptop.brandLaptop}}</td>
+                        <td>{{laptop.prixLaptop}}</td>
+                        <td>{{laptop.caracteristiquesLaptop}}</td>
+                        <td>{{laptop.dateCreation | date:'dd/MM/yyyy'}}</td>
+
+                        @if(laptop.model){
+                        <td>{{laptop.model.nomModel}}</td> }
+                        @else {
+                        <td>PAS DE MODELE</td>
+                        }
+                    </tr>
+                </tbody>
+                }
+
+            </table>
+        </div>
+    </div>
+</div>

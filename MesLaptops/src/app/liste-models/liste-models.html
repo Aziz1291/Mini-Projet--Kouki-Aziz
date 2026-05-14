@@ -1,0 +1,38 @@
+<div class="container">
+
+  <div class="col-sm-4 col-md-4 col-lg-4 mb-4">
+    <app-update-model
+      [model]="updatedModel"
+      (modelUpdated)="modelUpdated($event)"
+      (cancelled)="onCancel()"
+      [ajout]="ajout">
+    </app-update-model>
+  </div>
+
+  <div class="card shadow mb-4">
+    <div class="card-body">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Nom Modèle</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        @for(m of models; track m.idModel) {
+          <tbody>
+            <tr>
+              <td>{{m.idModel}}</td>
+              <td>{{m.nomModel}}</td>
+              <td>
+                <a class="btn btn-success me-2" (click)="updateMod(m)">Modifier</a>
+                <a class="btn btn-danger" (click)="supprimerModel(m)">Supprimer</a>
+              </td>
+            </tr>
+          </tbody>
+        }
+      </table>
+    </div>
+  </div>
+
+</div>

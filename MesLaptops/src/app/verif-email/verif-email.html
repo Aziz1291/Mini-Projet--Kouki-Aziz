@@ -1,0 +1,25 @@
+<div class="container mt-5">
+  <div class="row justify-content-md-center">
+    <div class="col-md-4">
+
+      @if (err) {
+        <div class="alert alert-danger">
+          <strong>{{err}}</strong>
+        </div>
+      }
+
+      <h5 class="mb-3">Un code a été envoyé à votre adresse email.</h5>
+
+      <form>
+        <div class="form-group mb-3">
+          <label>Veuillez entrer le code envoyé par mail :</label>
+          <input type="text" name="code" [(ngModel)]="code"
+                 class="form-control" placeholder="Code de confirmation (6 chiffres)">
+        </div>
+        <button type="button" class="btn btn-success w-100"
+                (click)="onValidateEmail()">Valider</button>
+      </form>
+
+    </div>
+  </div>
+</div>

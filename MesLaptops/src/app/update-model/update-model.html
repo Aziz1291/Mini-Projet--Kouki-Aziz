@@ -1,0 +1,20 @@
+<form>
+  <div [hidden]="ajout">
+    <label>ID Modèle</label>
+    <input type="text" [(ngModel)]="model.idModel" name="idModel"
+           class="form-control w-25" disabled>
+  </div>
+  <div>
+    <label>Nom Modèle</label>
+    <input type="text" [(ngModel)]="model.nomModel" name="nomModel" class="form-control"
+           placeholder="Entrez un nom de modèle...">
+  </div>
+  <div class="mt-2">
+    <button type="submit" [disabled]="!model.nomModel" class="btn btn-success"
+            (click)="saveModel()">{{ajout ? 'Ajouter' : 'Modifier'}}</button>
+    @if(!ajout) {
+      <button type="button" class="btn btn-secondary ms-2"
+              (click)="cancel()">Annuler</button>
+    }
+  </div>
+</form>
