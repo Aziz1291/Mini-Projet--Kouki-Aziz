@@ -1,8 +1,9 @@
 package com.example.Laptops.security;
 
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,8 +20,13 @@ import jakarta.servlet.http.HttpServletRequest;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    @Value("${app.cors.allowed-origins:http://localhost:4200}")
+    private String allowedOriginsRaw;
+
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        List<String> allowedOrigins = Arrays.asList(allowedOriginsRaw.split(","));
+
 		http.csrf(csrf -> csrf.disable())
 		    .sessionManagement(session ->
 		        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -28,10 +34,10 @@ public class SecurityConfig {
 		        @Override
 		        public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
 		            CorsConfiguration config = new CorsConfiguration();
-		            config.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
-		            config.setAllowedMethods(Collections.singletonList("*"));
+		            config.setAllowedOrigins(allowedOrigins);
+		            config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 		            config.setAllowCredentials(true);
-		            config.setAllowedHeaders(Collections.singletonList("*"));
+		            config.setAllowedHeaders(Arrays.asList("*"));
 		            config.setExposedHeaders(Arrays.asList("Authorization"));
 		            config.setMaxAge(3600L);
 		            return config;

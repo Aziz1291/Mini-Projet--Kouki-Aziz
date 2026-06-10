@@ -5,6 +5,7 @@ import { LaptopService } from '../services/laptop.service';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { Image } from '../model/laptop.model';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-laptops',
@@ -15,7 +16,7 @@ import { Image } from '../model/laptop.model';
 export class Laptops implements OnInit {
   laptops?: Laptop[];
 
-  apiurl: string = 'http://localhost:8080/laptops/api';
+  apiurl: string = environment.laptopsApiURL;
   ts: number = Date.now();
 
   constructor(

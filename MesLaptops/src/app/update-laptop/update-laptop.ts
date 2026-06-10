@@ -4,6 +4,7 @@ import { DatePipe } from '@angular/common';
 import { Image, Laptop, Model } from '../model/laptop.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LaptopService } from '../services/laptop.service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-update-laptop',
@@ -35,7 +36,7 @@ export class UpdateLaptop implements OnInit {
         this.currentLaptop = laptop;
         this.updatedModelId = laptop.model.idModel;
         // Load current image preview from filesystem
-        this.myImage = `http://localhost:8080/laptops/api/image/loadfromFS/${laptop.idLaptop}`;
+        this.myImage = `${environment.laptopsApiURL}/image/loadfromFS/${laptop.idLaptop}`;
       });
   }
 

@@ -41,7 +41,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
         }
 
         try {
-            JWTVerifier verifier = JWT.require(Algorithm.HMAC256(SecParams.SECRET)).build();
+            JWTVerifier verifier = JWT.require(Algorithm.HMAC256(SecParams.SECRET())).build();
 
             // Strip "Bearer " prefix
             jwt = jwt.substring(SecParams.PREFIX.length());

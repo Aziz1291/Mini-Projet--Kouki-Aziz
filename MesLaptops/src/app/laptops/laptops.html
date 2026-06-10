@@ -24,7 +24,7 @@
             <td>{{laptop.model.nomModel}}</td>
             <td>{{laptop.dateCreation | date:'dd/MM/yyyy'}}</td>
              <td>
-               <img [src]="'http://localhost:8080/laptops/api/image/getLastImageLaptop/' + laptop.idLaptop + '?t=' + ts"
+               <img [src]="apiurl + '/image/getLastImageLaptop/' + laptop.idLaptop + '?t=' + ts"
                  style="height:50px;width:100px;object-fit:cover;background:#eee;"
                  onerror="this.onerror=null;this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iNTAiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNlZWUiLz48dGV4dCB4PSI1MCUiIHk9IjU1JSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2FhYSIgZm9udC1zaXplPSIxMCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiPk5vIEltYWdlPC90ZXh0Pjwvc3ZnPg=='">
              </td>

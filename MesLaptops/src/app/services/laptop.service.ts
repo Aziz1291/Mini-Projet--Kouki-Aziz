@@ -3,11 +3,12 @@ import { Image, Laptop, Model } from '../model/laptop.model';
 import { ModelWrapper } from '../model/model-wrapper.model';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class LaptopService {
-  apiURL: string       = 'http://localhost:8080/laptops/api';
-  apiURLModels: string = 'http://localhost:8080/laptops/models';
+  apiURL: string       = environment.laptopsApiURL;
+  apiURLModels: string = environment.laptopsModelsURL;
 
   constructor(private http: HttpClient) { }
 

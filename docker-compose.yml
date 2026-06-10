@@ -1,0 +1,79 @@
+version: '3.9'
+
+services:
+
+  # ── MySQL Database ───────────────────────────────────────────────────────
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: spring_DB
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      # Seed script: creates the users_db database alongside spring_DB
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # ── Users Microservice (port 8081) ──────────────────────────────────────
+  users-microservice:
+    build:
+      context: ./users-microservice
+      dockerfile: Dockerfile
+    container_name: users-service
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "8081:8081"
+    environment:
+      DB_URL: jdbc:mysql://mysql:3306/users_db?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC
+      DB_USERNAME: root
+      DB_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+
+  # ── Laptops Service (port 8080) ──────────────────────────────
+  laptops:
+    build:
+      context: ./Laptops
+      dockerfile: Dockerfile
+    container_name: laptops-service
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      DB_URL: jdbc:mysql://mysql:3306/spring_DB?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      DB_USERNAME: root
+      DB_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
+
+  # ── Angular Frontend (port 80) ──────────────────────────────────────────
+  frontend:
+    build:
+      context: ./MesLaptops
+      dockerfile: Dockerfile
+    container_name: angular-frontend
+    restart: unless-stopped
+    depends_on:
+      - laptops
+      - users-microservice
+    ports:
+      - "80:80"
+
+volumes:
+  mysql_data:

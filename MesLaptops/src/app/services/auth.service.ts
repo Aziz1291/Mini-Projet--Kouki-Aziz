@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { User } from '../model/user.model';
+import { environment } from '../../environments/environment';
 
 /**
  * AuthService — JWT-based authentication.
@@ -14,7 +15,7 @@ import { User } from '../model/user.model';
 })
 export class AuthService {
 
-  apiURL: string = 'http://localhost:8081/users';
+  apiURL: string = environment.usersApiURL;
   token!: string;
 
   public loggedUser!: string;

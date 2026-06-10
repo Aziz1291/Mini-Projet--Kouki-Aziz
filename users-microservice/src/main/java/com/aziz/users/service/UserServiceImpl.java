@@ -15,6 +15,7 @@ import com.aziz.users.entities.VerificationToken;
 import com.aziz.users.exception.EmailAlreadyExistsException;
 import com.aziz.users.exception.ExpiredTokenException;
 import com.aziz.users.exception.InvalidTokenException;
+import com.aziz.users.exception.UsernameAlreadyExistsException;
 import com.aziz.users.register.RegistrationRequest;
 import com.aziz.users.repos.RoleRepository;
 import com.aziz.users.repos.UserRepository;
@@ -65,6 +66,10 @@ public class UserServiceImpl implements UserService {
         Optional<User> existing = userRep.findByEmail(request.getEmail());
         if (existing.isPresent())
             throw new EmailAlreadyExistsException("Email déjà utilisé !");
+
+        User existingUsername = userRep.findByUsername(request.getUsername());
+        if (existingUsername != null)
+            throw new UsernameAlreadyExistsException("Nom d'utilisateur déjà utilisé !");
 
         User newUser = new User();
         newUser.setUsername(request.getUsername());
@@ -118,6 +123,15 @@ public class UserServiceImpl implements UserService {
     public void sendEmailUser(User u, String code) {
         String body = "Bonjour <h1>" + u.getUsername() + "</h1>"
                     + " Votre code de validation est <h1>" + code + "</h1>";
-        emailSender.sendEmail(u.getEmail(), body);
+        try {
+            emailSender.sendEmail(u.getEmail(), body);
+            System.out.println("Email sent successfully to " + u.getEmail());
+        } catch (Exception e) {
+            System.err.println("============== EMAIL SENDING FAILED ==============");
+            System.err.println("The Gmail App Password is likely expired or invalid.");
+            System.err.println("YOUR VERIFICATION CODE FOR " + u.getUsername() + " IS: " + code);
+            System.err.println("==================================================");
+            e.printStackTrace();
+        }
     }
 }

@@ -64,7 +64,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             .withSubject(springUser.getUsername())
             .withArrayClaim("roles", roles.toArray(new String[0]))
             .withExpiresAt(new Date(System.currentTimeMillis() + SecParams.EXP_TIME))
-            .sign(Algorithm.HMAC256(SecParams.SECRET));
+            .sign(Algorithm.HMAC256(SecParams.SECRET()));
 
         response.addHeader("Authorization", "Bearer " + jwt);
     }

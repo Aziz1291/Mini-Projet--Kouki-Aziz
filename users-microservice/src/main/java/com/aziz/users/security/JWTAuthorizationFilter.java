@@ -45,7 +45,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
         // Verify signature and expiry
         try {
-            JWTVerifier verifier = JWT.require(Algorithm.HMAC256(SecParams.SECRET)).build();
+            JWTVerifier verifier = JWT.require(Algorithm.HMAC256(SecParams.SECRET())).build();
 
             // Strip "Bearer " prefix (7 characters)
             jwt = jwt.substring(7);
