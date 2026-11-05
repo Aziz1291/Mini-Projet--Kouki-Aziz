@@ -11,13 +11,24 @@ import { AuthService } from './services/auth.service';
 })
 export class App implements OnInit {
   title = 'Mes Laptops';
+  acknowledged = false;
+  get privacyPage(): boolean { return this.router.url.split('?')[0] === '/privacy'; }
+  acknowledge(): void {
+    this.acknowledged = true;
+    try { sessionStorage.setItem('laptopstore_notice', '1'); } catch {}
+    this.startApp();
+  }
   constructor (public authService: AuthService,
                private router: Router,
   ) {}
 
   ngOnInit () {
+    try { this.acknowledged = sessionStorage.getItem('laptopstore_notice') === '1'; } catch {}
+    if (this.acknowledged) this.startApp();
+  }
+  private startApp(): void {
     this.authService.loadToken();
-    const guestRoutes = ['/login', '/register', '/verifEmail', '/verif-email', '/forbidden', '/app-forbidden'];
+    const guestRoutes = ['/login', '/register', '/verifEmail', '/verif-email', '/forbidden', '/app-forbidden', '/privacy'];
     const hash = window.location.hash.replace(/^#/, '');
     const isGuestRoute = guestRoutes.some(route => hash.startsWith(route));
 

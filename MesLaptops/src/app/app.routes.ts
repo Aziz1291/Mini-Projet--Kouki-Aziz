@@ -1,3 +1,4 @@
+import { Privacy } from './privacy';
 import { Routes } from '@angular/router';
 import { Laptops } from './laptops/laptops';
 import { AddLaptop } from './add-laptop/add-laptop';
@@ -12,6 +13,7 @@ import { VerifEmail } from './verif-email/verif-email';
 import { laptopGuard } from './guards/laptop.guard';
 
 export const routes: Routes = [
+  { path: 'privacy', component: Privacy },
   { path: 'laptops', component: Laptops },
   { path: 'add-laptop', component: AddLaptop, canActivate: [laptopGuard] },
   { path: 'updateLaptop/:id', component: UpdateLaptop, canActivate: [laptopGuard] },

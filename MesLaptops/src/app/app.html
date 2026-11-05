@@ -1,3 +1,12 @@
+@if (!acknowledged && !privacyPage) {
+  <main class="notice-shell"><section class="notice-card" aria-labelledby="notice-title">
+    <p class="notice-kicker">LAPTOPSTORE · DÉMONSTRATION</p><h1 id="notice-title">Avant de commencer</h1>
+    <p>Cette démonstration utilise le stockage du navigateur pour la connexion et pour mémoriser cet avis pendant votre session. Un compte demande un nom d’utilisateur, une adresse e-mail et un mot de passe.</p>
+    <p>Consultez la <a routerLink="/privacy">politique de confidentialité et de stockage</a> avant de poursuivre. N’utilisez pas un mot de passe que vous utilisez ailleurs.</p>
+    <button class="btn btn-primary" type="button" (click)="acknowledge()">J’ai compris et je continue</button>
+    <p class="notice-small"><a href="https://azizkouki.com/">Quitter la démonstration</a></p>
+  </section></main>
+} @else {
 <nav class="navbar navbar-expand-lg">
   <div class="container-fluid px-3 px-lg-4">
     <a class="navbar-brand" routerLink="/laptops">
@@ -74,3 +83,6 @@
 </nav>
 
 <router-outlet />
+
+<footer class="privacy-footer"><a routerLink="/privacy">Confidentialité et stockage</a></footer>
+}
