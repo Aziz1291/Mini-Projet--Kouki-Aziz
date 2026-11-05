@@ -1,38 +1,85 @@
 <div class="container">
-
-  <div class="col-sm-4 col-md-4 col-lg-4 mb-4">
-    <app-update-model
-      [model]="updatedModel"
-      (modelUpdated)="modelUpdated($event)"
-      (cancelled)="onCancel()"
-      [ajout]="ajout">
-    </app-update-model>
+  <!-- Header Deck -->
+  <div class="mb-4">
+    <span class="kicker">MASTER DATA // CATEGORY WORKBENCH</span>
+    <h2 class="mb-1">Gestion des Gammes & Modèles</h2>
+    <p class="text-muted small mb-0">Définissez et administrez les catégories matérielles pour le catalogage des machines</p>
   </div>
 
-  <div class="card shadow mb-4">
-    <div class="card-body">
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>Id</th>
-            <th>Nom Modèle</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        @for(m of models; track m.idModel) {
-          <tbody>
-            <tr>
-              <td>{{m.idModel}}</td>
-              <td>{{m.nomModel}}</td>
-              <td>
-                <a class="btn btn-success me-2" (click)="updateMod(m)">Modifier</a>
-                <a class="btn btn-danger" (click)="supprimerModel(m)">Supprimer</a>
-              </td>
-            </tr>
-          </tbody>
-        }
-      </table>
+  <div class="row g-4 align-items-start">
+    <!-- LEFT PANE: Workbench Editor (40/60 Split Workbench) -->
+    <div class="col-lg-5">
+      <div class="card sticky-top" style="top: 84px;" [class.border-primary]="!ajout">
+        <div class="card-body p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="kicker mb-0">
+              {{ajout ? 'CRÉATION' : 'ÉDITION MATÉRIELLE'}}
+            </span>
+            <span class="badge" [class.tone-olive]="ajout" [class.tone-clay]="!ajout">
+              {{ajout ? 'Nouveau' : 'Modification'}}
+            </span>
+          </div>
+
+          <h4 class="mb-3">
+            {{ajout ? 'Ajouter une Gamme' : 'Modifier la Gamme'}}
+          </h4>
+
+          <app-update-model
+            [model]="updatedModel"
+            (modelUpdated)="modelUpdated($event)"
+            (cancelled)="onCancel()"
+            [ajout]="ajout">
+          </app-update-model>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANE: Category Inventory Ledger (60% Split) -->
+    <div class="col-lg-7">
+      <div class="card">
+        <div class="card-body p-0">
+          <div class="p-3 bg-light border-bottom d-flex justify-content-between align-items-center">
+            <strong class="small text-uppercase text-muted letter-spacing-1">
+              Modèles Actifs Répertoriés
+            </strong>
+            @if(models) {
+              <span class="count-badge">{{models.length}} catégories</span>
+            }
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-striped align-middle mb-0">
+              <thead>
+                <tr>
+                  <th style="width: 80px;">ID</th>
+                  <th>Nom de la Gamme</th>
+                  <th style="width: 170px; text-align: right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for(m of models; track m.idModel) {
+                  <tr [class.table-active]="!ajout && updatedModel.idModel === m.idModel">
+                    <td class="font-mono text-muted small">#{{m.idModel}}</td>
+                    <td>
+                      <span class="model-badge tone-sea me-2">
+                        {{m.nomModel}}
+                      </span>
+                    </td>
+                    <td style="text-align: right;">
+                      <button type="button" class="btn btn-sm btn-secondary me-1" (click)="updateMod(m)">
+                        Modifier
+                      </button>
+                      <button type="button" class="btn btn-sm btn-danger" (click)="supprimerModel(m)">
+                        Supprimer
+                      </button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-
 </div>

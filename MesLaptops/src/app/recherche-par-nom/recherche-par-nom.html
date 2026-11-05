@@ -1,59 +1,177 @@
 <div class="container">
-<!--
-    <form class="form-inline">
-        <div class="form-group mx-sm-3 mb-2 mt-2 ">
-            <label>Marque Laptop</label>
-            <input type="text" class="form-control" [(ngModel)]="nomLaptop" name="nomLaptop" class="form-control">
-            <button type="submit" (click)="rechercherLaptops()" class="btn btn-primary mb-2 ml-2">Rechercher</button>
-        </div>
-    </form> -->
-
-<!--  <form class="form-inline">
-        <div class="form-group mx-sm-3 mb-2 mt-2 ">
-            <label>Marque Laptop en tapant</label>
-            <input class="form-control" #searchInput (keyup)="onKeyUp(searchInput.value)">
-        </div>
-    </form> -->
-
-    <form class="form-inline">
-        <div class="form-group mx-sm-3 mb-2 mt-2 ">
-            <label>Marque Laptop en tapant</label>
-            <input #nom [(ngModel)]="searchTerm" name="searchTerm" class="form-control">
-        </div>
-    </form>
-
-
-    <div class="card shadow mb-4">
-        <div class="card-body">
-            <table class="table table-striped">
-                <tr>
-                    <th>Id</th>
-                    <th>Marque</th>
-                    <th>Prix</th>
-                    <th>Caractéristiques</th>
-                    <th>Date Création</th>
-                    <th>Modèle</th>
-                </tr>
-                @for (laptop of laptops | searchFilter: searchTerm ; track laptop.idLaptop)
-                {
-                <tbody>
-                    <tr>
-                        <td>{{laptop.idLaptop}}</td>
-                        <td>{{laptop.brandLaptop}}</td>
-                        <td>{{laptop.prixLaptop}}</td>
-                        <td>{{laptop.caracteristiquesLaptop}}</td>
-                        <td>{{laptop.dateCreation | date:'dd/MM/yyyy'}}</td>
-
-                        @if(laptop.model){
-                        <td>{{laptop.model.nomModel}}</td> }
-                        @else {
-                        <td>PAS DE MODELE</td>
-                        }
-                    </tr>
-                </tbody>
-                }
-
-            </table>
-        </div>
+  <!-- Header Deck -->
+  <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+    <div>
+      <span class="kicker">DISCOVERY ENGINE // FACETED SEARCH</span>
+      <h2 class="mb-1">Recherche & Filtres Instantanés</h2>
+      <p class="text-muted small mb-0">Trouvez instantanément une machine par constructeur, série ou mot-clé</p>
     </div>
+
+    <!-- View mode switcher -->
+    <div class="view-switcher" role="group" aria-label="Mode d'affichage">
+      <button type="button" [class.is-active]="viewMode === 'grid'" (click)="setViewMode('grid')">
+        <span>⊞</span> Grille
+      </button>
+      <button type="button" [class.is-active]="viewMode === 'table'" (click)="setViewMode('table')">
+        <span>☰</span> Tableau
+      </button>
+    </div>
+  </div>
+
+  <!-- Faceted Filter Ribbon Card -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <!-- Search Input with Clear Button -->
+      <div class="mb-3">
+        <label>Marque ou mot-clé constructeur</label>
+        <div class="position-relative">
+          <input [(ngModel)]="searchTerm"
+                 name="searchTerm"
+                 class="form-control form-control-lg pe-5"
+                 placeholder="Tapez pour filtrer en temps réel (ex: ThinkPad, MacBook, Dell XPS...)">
+          @if(searchTerm) {
+            <button type="button"
+                    (click)="clearSearch()"
+                    class="btn btn-sm position-absolute end-0 top-50 translate-middle-y me-2 border-0 text-muted"
+                    title="Effacer le filtre">
+              ✕
+            </button>
+          }
+        </div>
+      </div>
+
+      <!-- Quick Brand Pills -->
+      <div>
+        <label class="mb-2">Constructeurs Fréquents</label>
+        <div class="facet-ribbon">
+          <button type="button"
+                  class="facet-pill"
+                  [class.is-active]="!searchTerm"
+                  (click)="clearSearch()">
+            Tous
+          </button>
+          @for(b of popularBrands; track b) {
+            <button type="button"
+                    class="facet-pill"
+                    [class.is-active]="searchTerm.toLowerCase() === b.toLowerCase()"
+                    (click)="setFilter(b)">
+              {{b}}
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  @if(!laptops) {
+    <div class="card p-5 text-center">
+      <div class="spinner-border text-primary mx-auto mb-3" role="status"></div>
+      <p class="text-muted font-mono small mb-0">RECHERCHE DANS LE CATALOGUE...</p>
+    </div>
+  }
+
+  <!-- Results View -->
+  @if(laptops) {
+    <!-- MODE A: GRID -->
+    @if(viewMode === 'grid') {
+      <div class="hardware-grid">
+        @for (laptop of laptops | searchFilter: searchTerm; track laptop.idLaptop) {
+          <article class="hardware-card">
+            <div class="hardware-card__bay">
+              <img [src]="apiurl + '/image/getLastImageLaptop/' + laptop.idLaptop + '?t=' + ts"
+                   alt="{{laptop.brandLaptop}}"
+                   onerror="this.onerror=null;this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMTg4IiB2aWV3Qm94PSIwIDAgMzAwIDE4OCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iI2YxZjNmNyIvPjx0ZXh0IHg9IjUwJSIgeT0iNTQlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjODc4NDgwIiBmb250LXNpemU9IjEyIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+QXVjdW5lIEltYWdlPC90ZXh0Pjwvc3ZnPg=='">
+              
+              @if(laptop.model) {
+                <span class="position-absolute top-0 end-0 m-2 model-badge tone-sea border border-white">
+                  {{laptop.model.nomModel}}
+                </span>
+              }
+            </div>
+
+            <div class="hardware-card__body">
+              <div class="hardware-card__head">
+                <div>
+                  <span class="kicker mb-0 font-mono">#{{laptop.idLaptop}}</span>
+                  <h3 class="hardware-card__brand">{{laptop.brandLaptop}}</h3>
+                </div>
+                <div class="price-tag">
+                  {{laptop.prixLaptop | number:'1.2-2'}} DZD
+                </div>
+              </div>
+
+              <div class="spec-chips my-1">
+                @for(spec of parseSpecs(laptop.caracteristiquesLaptop); track $index) {
+                  <span class="spec-chip">⚙ {{spec}}</span>
+                }
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center pt-2 mt-auto border-top">
+                <span class="text-muted font-mono small" style="font-size: 0.74rem;">
+                  {{laptop.dateCreation | date:'dd/MM/yyyy'}}
+                </span>
+                <span class="badge bg-light text-dark border">
+                  {{laptop.model?.nomModel || 'Standard'}}
+                </span>
+              </div>
+            </div>
+          </article>
+        }
+      </div>
+    }
+
+    <!-- MODE B: TABLE -->
+    @if(viewMode === 'table') {
+      <div class="card">
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-striped align-middle mb-0">
+              <thead>
+                <tr>
+                  <th style="width: 70px;">ID</th>
+                  <th style="width: 90px;">Visuel</th>
+                  <th>Marque & Modèle</th>
+                  <th>Prix unitaire</th>
+                  <th>Caractéristiques</th>
+                  <th>Catégorie</th>
+                  <th>Créé le</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (laptop of laptops | searchFilter: searchTerm; track laptop.idLaptop) {
+                  <tr>
+                    <td class="font-mono text-muted small">#{{laptop.idLaptop}}</td>
+                    <td>
+                      <img [src]="apiurl + '/image/getLastImageLaptop/' + laptop.idLaptop + '?t=' + ts"
+                           style="height: 40px; width: 64px; object-fit: cover; border-radius: 4px; border: 1px solid var(--line); background: var(--tint);"
+                           alt="{{laptop.brandLaptop}}"
+                           onerror="this.onerror=null;this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI3MCIgaGVpZ2h0PSI0NCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iI2YxZjNmNyIvPjx0ZXh0IHg9IjUwJSIgeT0iNTUlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjYWFhIiBmb250LXNpemU9IjgiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIj5ObyBJbWc8L3RleHQ+PC9zdmc+'">
+                    </td>
+                    <td><strong>{{laptop.brandLaptop}}</strong></td>
+                    <td><span class="price-badge">{{laptop.prixLaptop | number:'1.2-2'}} DZD</span></td>
+                    <td>
+                      <div class="spec-chips">
+                        @for(spec of parseSpecs(laptop.caracteristiquesLaptop); track $index) {
+                          <span class="spec-chip">{{spec}}</span>
+                        }
+                      </div>
+                    </td>
+                    <td>
+                      @if(laptop.model) {
+                        <span class="model-badge tone-sea">{{laptop.model.nomModel}}</span>
+                      } @else {
+                        <span class="badge bg-secondary text-white">Sans modèle</span>
+                      }
+                    </td>
+                    <td class="text-muted font-mono small">{{laptop.dateCreation | date:'dd/MM/yyyy'}}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    }
+  }
 </div>

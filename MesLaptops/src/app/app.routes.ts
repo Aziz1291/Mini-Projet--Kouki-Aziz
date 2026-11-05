@@ -12,15 +12,21 @@ import { VerifEmail } from './verif-email/verif-email';
 import { laptopGuard } from './guards/laptop.guard';
 
 export const routes: Routes = [
-    { path: "laptops",              component: Laptops },
-    { path: "add-laptop",           component: AddLaptop,       canActivate: [laptopGuard] },
-    { path: "updateLaptop/:id",     component: UpdateLaptop,    canActivate: [laptopGuard] },
-    { path: "rechercheParModel",    component: RechercheParModel },
-    { path: "rechercheParNom",      component: RechercheParNom },
-    { path: "listeModels",          component: ListeModels,     canActivate: [laptopGuard] },
-    { path: "login",                component: Login },
-    { path: "register",             component: Register },
-    { path: "verifEmail",           component: VerifEmail },
-    { path: "app-forbidden",        component: Forbidden },
-    { path: "",                     redirectTo: "laptops",      pathMatch: "full" }
+  { path: 'laptops', component: Laptops },
+  { path: 'add-laptop', component: AddLaptop, canActivate: [laptopGuard] },
+  { path: 'updateLaptop/:id', component: UpdateLaptop, canActivate: [laptopGuard] },
+  { path: 'rechercheParModel', component: RechercheParModel },
+  { path: 'recherche-par-model', redirectTo: 'rechercheParModel' },
+  { path: 'rechercheParNom', component: RechercheParNom },
+  { path: 'recherche-par-nom', redirectTo: 'rechercheParNom' },
+  { path: 'listeModels', component: ListeModels, canActivate: [laptopGuard] },
+  { path: 'liste-models', redirectTo: 'listeModels' },
+  { path: 'login', component: Login },
+  { path: 'register', component: Register },
+  { path: 'verifEmail', component: VerifEmail },
+  { path: 'verif-email', redirectTo: 'verifEmail' },
+  { path: 'forbidden', redirectTo: 'app-forbidden' },
+  { path: 'app-forbidden', component: Forbidden },
+  { path: '', redirectTo: 'laptops', pathMatch: 'full' },
+  { path: '**', redirectTo: 'laptops' }
 ];

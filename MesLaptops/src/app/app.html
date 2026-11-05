@@ -1,54 +1,74 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Gestion des Laptops</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+<nav class="navbar navbar-expand-lg">
+  <div class="container-fluid px-3 px-lg-4">
+    <a class="navbar-brand" routerLink="/laptops">
+      <span class="brand-kicker">
+        <span class="status-dot"></span>
+        HARDWARE // INVENTORY
+      </span>
+      <span class="brand-title">LaptopStore</span>
+    </a>
+
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page"  routerLink="/laptops"  >Home</a>
+          <a class="nav-link" routerLink="/laptops" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+            Catalogue
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/rechercheParNom" routerLinkActive="active">
+            Recherche
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/rechercheParModel" routerLinkActive="active">
+            Par Modèle
+          </a>
         </li>
 
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Laptops
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            @if(authService.isAdmin()) {
-               <li><a class="dropdown-item"  routerLink="/add-laptop">Ajouter</a></li>
-             }
-            <li><a class="dropdown-item" href="">Lister</a></li>
-            <li> <a class="dropdown-item"  routerLink="/rechercheParModel" >Recherche Par Modèle</a></li>
-            <li><a class="dropdown-item"  routerLink="/rechercheParNom" >Recherche Par Nom</a></li>
-            @if(authService.isAdmin()) {
-              <li> <a class="dropdown-item" routerLink="/listeModels" >Gestion des modèles</a></li>
-            }
-          </ul>
-        </li>
+        @if(authService.isAdmin()) {
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/listeModels" routerLinkActive="active">
+              Modèles
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/add-laptop" routerLinkActive="active">
+              + Ajouter Laptop
+            </a>
+          </li>
+        }
       </ul>
 
-
-      <ul class="navbar-nav ms-auto m-2" >
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            [{{authService.loggedUser}}]
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            @if(!authService.isloggedIn){
-              <li><a class="dropdown-item"routerLink="/login">Login</a></li>
-            }
-            @else {
-              <li><a class="dropdown-item"   (click) = "onLogout()">Logout</a></li>
-            }
-
-          
-            <li><a class="dropdown-item" href="#">Profile</a></li>
-          </ul>
-        </li>
+      <ul class="navbar-nav ms-auto align-items-center gap-2">
+        @if(authService.isloggedIn) {
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle p-0 d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <span class="user-identity-chip">
+                <span>👤 {{authService.loggedUser}}</span>
+                @if(authService.isAdmin()) {
+                  <span class="badge-admin">ADMIN</span>
+                }
+              </span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="userDropdown">
+              <li><span class="dropdown-item-text text-muted small">Connecté en tant que <strong>{{authService.loggedUser}}</strong></span></li>
+              <li><hr class="dropdown-divider my-1"></li>
+              <li><a class="dropdown-item text-danger d-flex align-items-center gap-2" style="cursor: pointer;" (click)="onLogout()">
+                <span>↳</span> Déconnexion
+              </a></li>
+            </ul>
+          </li>
+        } @else {
+          <li class="nav-item">
+            <a class="btn btn-sm btn-primary" routerLink="/login">Se connecter</a>
+          </li>
+        }
       </ul>
-
-
     </div>
   </div>
 </nav>

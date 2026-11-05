@@ -1,1 +1,745 @@
-/* You can add global styles to this file, and also import other style files */
+/* ==========================================================================
+   LAPTOPSTORE DESIGN SYSTEM — WARM LIMESTONE & INDUSTRIAL HARDWARE
+   Benchmark: CV-and-Portfolio (Outfit, JetBrains Mono, 1px Hairlines, Tactile)
+   Anti-AI Slop: No purple mesh blobs, no blurry glassmorphism, pure craft.
+   ========================================================================== */
+
+:root {
+  /* Surfaces & Canvas Neutrals (Warm Stone Benchmark) */
+  --bg: #fafaf9;
+  --surface: #ffffff;
+  --surface-subtle: #fbfbfb;
+  --tint: #f1f3f7;
+  --line: #e2e2df;
+  --line-strong: #c8c8c4;
+
+  /* Ink & Contrast Hierarchy */
+  --ink: #1c1917;
+  --muted: #57534e;
+  --subtle: #8c8883;
+
+  /* Brand Accents (Royal Ultramarine) */
+  --accent: #1d4ed8;
+  --accent-dark: #1e3a8a;
+  --accent-tint: #eff6ff;
+  --accent-subtle: rgba(29, 78, 216, 0.08);
+
+  /* Contextual Accent Tones (Portfolio DNA) */
+  --tone-olive: #d7dcbd;
+  --tone-olive-ink: #3b4528;
+  --tone-clay: #eccdb4;
+  --tone-clay-ink: #87381b;
+  --tone-sea: #c3dcd6;
+  --tone-sea-ink: #1f4f52;
+
+  /* Functional Tones */
+  --danger-bg: #fef2f2;
+  --danger-ink: #b91c1c;
+  --danger-border: #fecaca;
+  --success-bg: #f0fdf4;
+  --success-ink: #15803d;
+  --success-border: #bbf7d0;
+
+  /* Typography */
+  --font: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+
+  /* Radii & Elevation */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-pill: 9999px;
+  --shadow-subtle: 0 1px 3px rgba(28, 25, 23, 0.05);
+  --shadow-card: 0 4px 16px -4px rgba(28, 25, 23, 0.08), 0 1px 3px rgba(28, 25, 23, 0.04);
+  --shadow-medium: 0 12px 32px -8px rgba(28, 25, 23, 0.12);
+}
+
+/* Base Body Styles */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 76px;
+}
+
+body {
+  font-family: var(--font);
+  background-color: var(--bg);
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.55;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Global Container — Full-Width Expansive on Laptops with Generous Padding */
+.container,
+.container-fluid {
+  max-width: 100% !important;
+  width: 100% !important;
+  padding-left: clamp(20px, 3.5vw, 64px) !important;
+  padding-right: clamp(20px, 3.5vw, 64px) !important;
+  padding-top: 2rem;
+  padding-bottom: 3.5rem;
+  box-sizing: border-box;
+}
+
+/* Headings & Kickers */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--ink);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  margin-bottom: 0.5rem;
+}
+
+h2 {
+  font-size: clamp(1.4rem, 2.5vw, 1.85rem);
+}
+
+.kicker {
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 0.35rem;
+}
+
+.font-mono {
+  font-family: var(--font-mono) !important;
+}
+
+/* Links */
+a {
+  color: var(--accent);
+  text-decoration: none;
+  text-underline-offset: 3px;
+  transition: color 0.15s ease;
+}
+
+a:hover {
+  color: var(--accent-dark);
+  text-decoration: underline;
+}
+
+/* Focus Visible (Benchmark Precision) */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ==========================================================================
+   Tactile Buttons & Interactive Physics
+   ========================================================================== */
+.btn {
+  font-family: var(--font);
+  font-weight: 500;
+  font-size: 0.88rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  text-decoration: none !important;
+  cursor: pointer;
+  background-color: var(--surface);
+  color: var(--ink);
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn-primary {
+  background-color: var(--accent) !important;
+  border-color: var(--accent) !important;
+  color: #ffffff !important;
+}
+
+.btn-primary:hover, .btn-primary:focus {
+  background-color: var(--accent-dark) !important;
+  border-color: var(--accent-dark) !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(29, 78, 216, 0.25);
+}
+
+.btn-success {
+  background-color: #15803d !important;
+  border-color: #15803d !important;
+  color: #ffffff !important;
+}
+
+.btn-success:hover, .btn-success:focus {
+  background-color: #166534 !important;
+  border-color: #166534 !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(21, 128, 61, 0.25);
+}
+
+.btn-danger {
+  background-color: var(--danger-bg) !important;
+  border-color: var(--danger-border) !important;
+  color: var(--danger-ink) !important;
+}
+
+.btn-danger:hover, .btn-danger:focus {
+  background-color: #fee2e2 !important;
+  border-color: #fca5a5 !important;
+  color: #991b1b !important;
+}
+
+.btn-secondary, .btn-outline-secondary {
+  background-color: var(--surface) !important;
+  border-color: var(--line) !important;
+  color: var(--muted) !important;
+}
+
+.btn-secondary:hover, .btn-outline-secondary:hover {
+  background-color: var(--tint) !important;
+  border-color: var(--line-strong) !important;
+  color: var(--ink) !important;
+}
+
+.btn-sm {
+  padding: 0.3rem 0.65rem;
+  font-size: 0.8rem;
+  border-radius: var(--radius-xs);
+}
+
+/* ==========================================================================
+   Architectural Navbar
+   ========================================================================== */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(250, 250, 249, 0.94) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+  padding: 0.75rem 0;
+  transition: all 0.2s ease;
+}
+
+.navbar-brand {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  margin-right: 2rem;
+  text-decoration: none !important;
+}
+
+.navbar-brand .brand-kicker {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  text-transform: uppercase;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.navbar-brand .brand-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  line-height: 1.2;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background-color: #22c55e;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+}
+
+.nav-link {
+  color: var(--muted) !important;
+  font-weight: 500;
+  font-size: 0.9rem;
+  padding: 0.45rem 0.85rem !important;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s ease;
+}
+
+.nav-link:hover {
+  color: var(--ink) !important;
+  background-color: var(--tint);
+}
+
+.nav-link.active {
+  color: var(--accent) !important;
+  font-weight: 600;
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-subtle);
+}
+
+.dropdown-menu {
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: 0.45rem;
+}
+
+.dropdown-item {
+  color: var(--ink);
+  font-size: 0.88rem;
+  font-weight: 500;
+  padding: 0.45rem 0.85rem;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s ease;
+}
+
+.dropdown-item:hover, .dropdown-item:focus {
+  background-color: var(--tint);
+  color: var(--accent);
+}
+
+/* User Identity Chip */
+.user-identity-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  font-size: 0.86rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.badge-admin {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  background: var(--ink);
+  color: #ffffff;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* ==========================================================================
+   Architectural Cards & Spec Sheets
+   ========================================================================== */
+.card, .arch-card {
+  background-color: var(--surface);
+  border: 1px solid var(--line) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-subtle) !important;
+  overflow: hidden;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card:hover, .arch-card:hover {
+  border-color: var(--line-strong) !important;
+  box-shadow: var(--shadow-card) !important;
+}
+
+.card-body {
+  padding: 1.5rem !important;
+}
+
+/* Hardware Catalog Grid & Card Anatomy */
+.hardware-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 24px;
+}
+
+.hardware-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hardware-card:hover {
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow-card);
+  transform: translateY(-2px);
+}
+
+.hardware-card__bay {
+  display: block;
+  aspect-ratio: 16 / 10;
+  background: #fbfbfa;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+  overflow: hidden;
+}
+
+.hardware-card__bay img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hardware-card:hover .hardware-card__bay img {
+  transform: scale(1.03);
+}
+
+.hardware-card__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px 20px 20px;
+}
+
+.hardware-card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.hardware-card__brand {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.25;
+  margin: 0;
+}
+
+/* Monospace Hardware Spec Chips */
+.spec-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.spec-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  background-color: var(--tint);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+/* High Contrast Price Tag */
+.price-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  background-color: var(--ink);
+  color: #ffffff;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.price-badge {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--ink);
+  background-color: var(--tint);
+  border: 1px solid var(--line);
+  padding: 0.25rem 0.55rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+/* Contextual Accent Badges (Portfolio DNA) */
+.tone-olive {
+  background-color: var(--tone-olive) !important;
+  color: var(--tone-olive-ink) !important;
+}
+
+.tone-clay {
+  background-color: var(--tone-clay) !important;
+  color: var(--tone-clay-ink) !important;
+}
+
+.tone-sea {
+  background-color: var(--tone-sea) !important;
+  color: var(--tone-sea-ink) !important;
+}
+
+.model-badge {
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
+}
+
+/* ==========================================================================
+   Architectural Table Ledger
+   ========================================================================== */
+.table {
+  color: var(--ink) !important;
+  margin-bottom: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.table > :not(caption) > * > * {
+  border-bottom-color: var(--line) !important;
+  background-color: transparent;
+}
+
+.table th {
+  background-color: var(--tint) !important;
+  color: var(--muted) !important;
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.85rem 1rem !important;
+  vertical-align: middle;
+  border-top: none;
+  border-bottom: 1px solid var(--line-strong) !important;
+}
+
+.table th:first-child {
+  border-top-left-radius: var(--radius-md);
+}
+
+.table th:last-child {
+  border-top-right-radius: var(--radius-md);
+}
+
+.table td {
+  padding: 0.95rem 1rem !important;
+  vertical-align: middle;
+  font-size: 0.92rem;
+  color: var(--ink);
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+  background-color: var(--surface-subtle) !important;
+}
+
+.table-striped > tbody > tr:hover > * {
+  background-color: var(--tint) !important;
+}
+
+/* ==========================================================================
+   Faceted Filter Ribbons
+   ========================================================================== */
+.facet-ribbon {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.facet-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.facet-pill:hover {
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+
+.facet-pill.is-active {
+  background-color: var(--ink);
+  border-color: var(--ink);
+  color: #ffffff;
+}
+
+.facet-pill.is-active .count-badge {
+  background-color: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+.count-badge {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 1px 6px;
+  border-radius: var(--radius-pill);
+  background: var(--tint);
+  color: var(--muted);
+}
+
+/* ==========================================================================
+   Form Controls & Industrial Inputs
+   ========================================================================== */
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.4rem;
+  display: block;
+}
+
+.form-control, .form-select {
+  background-color: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 0.85rem;
+  font-family: var(--font);
+  font-size: 0.92rem;
+  color: var(--ink);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-subtle);
+  background-color: #ffffff;
+}
+
+/* Drag and Drop Image Bay */
+.upload-dropzone {
+  border: 2px dashed var(--line-strong);
+  border-radius: var(--radius-md);
+  padding: 2rem 1.5rem;
+  text-align: center;
+  background-color: var(--bg);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.upload-dropzone:hover {
+  border-color: var(--accent);
+  background-color: var(--accent-tint);
+}
+
+/* ==========================================================================
+   Authentication Center-Plate Suite
+   ========================================================================== */
+.auth-wrapper {
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem 2.25rem;
+  box-shadow: var(--shadow-card);
+  margin-top: 2rem;
+  max-width: 460px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.auth-header h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 0.35rem;
+}
+
+.auth-header p {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* Alerts & Diagnostics */
+.alert {
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  border: 1px solid transparent;
+  padding: 0.85rem 1rem;
+}
+
+.alert-danger {
+  background-color: var(--danger-bg);
+  color: var(--danger-ink);
+  border-color: var(--danger-border);
+  border-left: 4px solid var(--danger-ink);
+}
+
+.alert-success {
+  background-color: var(--success-bg);
+  color: var(--success-ink);
+  border-color: var(--success-border);
+  border-left: 4px solid var(--success-ink);
+}
+
+/* View Mode Switcher */
+.view-switcher {
+  display: inline-flex;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.view-switcher button {
+  border: 0;
+  background: transparent;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.view-switcher button.is-active {
+  background: var(--ink);
+  color: #ffffff;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .hardware-grid {
+    grid-template-columns: 1fr;
+  }
+  .container {
+    padding-top: 1.25rem;
+  }
+}

@@ -4,7 +4,6 @@ import { Laptop } from '../model/laptop.model';
 import { LaptopService } from '../services/laptop.service';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { Image } from '../model/laptop.model';
 import { environment } from '../../environments/environment';
 
 @Component({
@@ -12,9 +11,11 @@ import { environment } from '../../environments/environment';
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './laptops.html',
+  styleUrl: './laptops.css'
 })
 export class Laptops implements OnInit {
   laptops?: Laptop[];
+  viewMode: 'grid' | 'table' = 'grid';
 
   apiurl: string = environment.laptopsApiURL;
   ts: number = Date.now();
@@ -35,12 +36,24 @@ export class Laptops implements OnInit {
     });
   }
 
+  setViewMode(mode: 'grid' | 'table') {
+    this.viewMode = mode;
+  }
+
+  parseSpecs(caracteristiques?: string): string[] {
+    if (!caracteristiques) return [];
+    return caracteristiques
+      .split(/[,;|]/)
+      .map(s => s.trim())
+      .filter(s => s.length > 0);
+  }
+
   supprimerLaptop(p: Laptop) {
-    let conf = confirm('Etes-vous sûr ?');
-    if (conf)
+    const conf = confirm(`Confirmer la suppression du laptop #${p.idLaptop} (${p.brandLaptop}) ?`);
+    if (conf) {
       this.laptopService.supprimerLaptop(p.idLaptop).subscribe(() => {
-        console.log('laptop supprimé');
         this.chargerLaptops();
       });
+    }
   }
 }

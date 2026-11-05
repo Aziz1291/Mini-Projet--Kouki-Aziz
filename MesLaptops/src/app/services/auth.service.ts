@@ -36,6 +36,7 @@ export class AuthService {
    *  Strips the "Bearer " prefix if present — the interceptor re-adds it.
    *  Without this, the Authorization header becomes "Bearer Bearer eyJ..." → 401/403 */
   saveToken(jwt: string) {
+    if (!jwt) return;
     const rawToken = jwt.startsWith('Bearer ') ? jwt.substring(7) : jwt;
     localStorage.setItem('jwt', rawToken);
     this.token = rawToken;
@@ -46,9 +47,15 @@ export class AuthService {
   /** Decodes the JWT payload to extract username (sub) and roles */
   decodeJWT() {
     if (!this.token) return;
-    const decoded = this.helper.decodeToken(this.token);
-    this.roles      = decoded.roles;
-    this.loggedUser = decoded.sub;
+    try {
+      const decoded = this.helper.decodeToken(this.token);
+      if (decoded) {
+        this.roles      = decoded.roles;
+        this.loggedUser = decoded.sub;
+      }
+    } catch (e) {
+      console.error('Error decoding JWT token:', e);
+    }
   }
 
   /** Loads token from localStorage (called on app startup) */
@@ -65,7 +72,12 @@ export class AuthService {
   }
 
   isTokenExpired(): Boolean {
-    return this.helper.isTokenExpired(this.token);
+    if (!this.token) return true;
+    try {
+      return this.helper.isTokenExpired(this.token);
+    } catch {
+      return true;
+    }
   }
 
   isAdmin(): Boolean {

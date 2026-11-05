@@ -1,16 +1,17 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Model } from '../model/laptop.model';
 import { LaptopService } from '../services/laptop.service';
 import { UpdateModel } from '../update-model/update-model';
 
 @Component({
   selector: 'app-liste-models',
-  imports: [UpdateModel],
+  standalone: true,
+  imports: [CommonModule, UpdateModel],
   templateUrl: './liste-models.html',
   styles: ``
 })
 export class ListeModels implements OnInit {
-
   models!: Model[];
   updatedModel: Model = { idModel: 0, nomModel: '' };
   ajout: boolean = true;
@@ -24,44 +25,40 @@ export class ListeModels implements OnInit {
   chargerModels() {
     this.laptopService.listeModels().subscribe((data: any) => {
       this.models = data._embedded.models;
-      console.log(data);
     });
   }
 
   modelUpdated(model: Model) {
-    console.log('Model updated event', model);
     if (this.ajout) {
-      this.laptopService.ajouterModel(model)
-        .subscribe(() => {
-          this.chargerModels();
-          this.updatedModel = { idModel: 0, nomModel: '' };
-        });
-    } else {
-      this.laptopService.mettreAJourModel(model)
-        .subscribe(() => {
-          this.chargerModels();
-          this.ajout = true;
-          this.updatedModel = { idModel: 0, nomModel: '' };
-        });
-    }
-  }
-
-  supprimerModel(model: Model) {
-    let conf = confirm(`Supprimer le modèle "${model.nomModel}" ?`);
-    if (conf) {
-      this.laptopService.supprimerModel(model.idModel).subscribe(() => {
+      this.laptopService.ajouterModel(model).subscribe(() => {
         this.chargerModels();
+        this.updatedModel = { idModel: 0, nomModel: '' };
+      });
+    } else {
+      this.laptopService.mettreAJourModel(model).subscribe(() => {
+        this.chargerModels();
+        this.ajout = true;
+        this.updatedModel = { idModel: 0, nomModel: '' };
       });
     }
-  }
-
-  onCancel() {
-    this.updatedModel = { idModel: 0, nomModel: '' };
-    this.ajout = true;
   }
 
   updateMod(model: Model) {
     this.updatedModel = { ...model };
     this.ajout = false;
+  }
+
+  onCancel() {
+    this.ajout = true;
+    this.updatedModel = { idModel: 0, nomModel: '' };
+  }
+
+  supprimerModel(model: Model) {
+    const conf = confirm(`Supprimer le modèle "${model.nomModel}" ?`);
+    if (conf) {
+      this.laptopService.supprimerModel(model.idModel).subscribe(() => {
+        this.chargerModels();
+      });
+    }
   }
 }

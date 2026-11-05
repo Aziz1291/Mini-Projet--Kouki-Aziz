@@ -1,25 +1,52 @@
-<div class="container mt-5">
-  <div class="row justify-content-md-center">
-    <div class="col-md-4">
-
-      @if (err) {
-        <div class="alert alert-danger">
-          <strong>{{err}}</strong>
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4">
+      <div class="auth-wrapper text-center">
+        <div class="auth-header mb-4">
+          <span class="kicker">TWO-FACTOR // EMAIL VERIFICATION</span>
+          <h3>Validation du Compte</h3>
+          <p>Un code à 6 chiffres a été expédié à votre adresse email</p>
         </div>
-      }
 
-      <h5 class="mb-3">Un code a été envoyé à votre adresse email.</h5>
+        @if (err) {
+          <div class="alert alert-danger mb-4 text-start" role="alert">
+            <strong>Erreur de validation :</strong>
+            <div>{{err}}</div>
+          </div>
+        }
 
-      <form>
-        <div class="form-group mb-3">
-          <label>Veuillez entrer le code envoyé par mail :</label>
-          <input type="text" name="code" [(ngModel)]="code"
-                 class="form-control" placeholder="Code de confirmation (6 chiffres)">
-        </div>
-        <button type="button" class="btn btn-success w-100"
-                (click)="onValidateEmail()">Valider</button>
-      </form>
+        <form (ngSubmit)="onValidateEmail()">
+          <div class="form-group mb-4">
+            <label for="otpCode" class="mb-2">Code d'activation (OTP)</label>
+            <input type="text"
+                   id="otpCode"
+                   name="code"
+                   [(ngModel)]="code"
+                   class="form-control text-center font-mono py-2"
+                   style="font-size: 1.65rem; letter-spacing: 0.35em; font-weight: 700; background: var(--tint);"
+                   placeholder="000000"
+                   maxlength="6"
+                   autocomplete="one-time-code"
+                   required>
+            <span class="text-muted small mt-2 d-block" style="font-size: 0.76rem;">
+              Vérifiez vos spams si le message n'apparaît pas dans la minute.
+            </span>
+          </div>
 
+          <div class="d-grid">
+            <button type="submit"
+                    [disabled]="!code || code.length < 6 || loading"
+                    class="btn btn-primary py-2">
+              @if(loading) {
+                <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                Validation en cours...
+              } @else {
+                Confirmer l'accès au portail
+              }
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </div>

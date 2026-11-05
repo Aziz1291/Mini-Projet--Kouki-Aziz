@@ -1,54 +1,175 @@
 <div class="container">
-  <div>
-    <h2>Ajouter un Laptop :</h2>
+  <!-- Header Deck -->
+  <div class="mb-4">
+    <span class="kicker">INVENTORY INGESTION // NEW SPEC SHEET</span>
+    <h2 class="mb-1">Ajouter une Machine au Catalogue</h2>
+    <p class="text-muted small mb-0">Renseignez les spécifications matérielles complètes et prévisualisez la fiche en direct</p>
   </div>
-  <form>
-    <div hidden class="col-sm-2 col-md-2 col-lg-2">
-      <label>ID Laptop</label>
-      <input type="text" [(ngModel)]="newLaptop.idLaptop" name="idLaptop" class="form-control">
+
+  <div class="row g-4 align-items-start">
+    <!-- LEFT COLUMN: Structured Form -->
+    <div class="col-lg-7">
+      <div class="card">
+        <div class="card-body p-4">
+          <form (ngSubmit)="addLaptop()">
+            <div class="row g-3">
+              <!-- Brand -->
+              <div class="col-md-6">
+                <label for="brandLaptop">Marque / Constructeur</label>
+                <input type="text"
+                       id="brandLaptop"
+                       [(ngModel)]="newLaptop.brandLaptop"
+                       name="brandLaptop"
+                       class="form-control"
+                       placeholder="Ex: Lenovo ThinkPad P16, MacBook Pro..."
+                       required>
+              </div>
+
+              <!-- Model Selector -->
+              <div class="col-md-6">
+                <label for="idModel">Modèle / Série</label>
+                <select class="form-select" id="idModel" name="idModel" [(ngModel)]="newIdModel" required>
+                  @for(m of models; track m.idModel) {
+                    <option [value]="m.idModel">{{m.nomModel}}</option>
+                  }
+                </select>
+              </div>
+
+              <!-- Price -->
+              <div class="col-md-6">
+                <label for="prixLaptop">Prix unitaire (DZD)</label>
+                <input type="number"
+                       id="prixLaptop"
+                       [(ngModel)]="newLaptop.prixLaptop"
+                       name="prixLaptop"
+                       class="form-control font-mono"
+                       placeholder="Ex: 185000"
+                       required>
+              </div>
+
+              <!-- Creation Date -->
+              <div class="col-md-6">
+                <label for="dateCreation">Date de mise en service</label>
+                <input type="date"
+                       id="dateCreation"
+                       [(ngModel)]="newLaptop.dateCreation"
+                       name="dateCreation"
+                       class="form-control font-mono">
+              </div>
+
+              <!-- Technical Specifications -->
+              <div class="col-12">
+                <label for="caracteristiquesLaptop">Spécifications Techniques</label>
+                <input type="text"
+                       id="caracteristiquesLaptop"
+                       [(ngModel)]="newLaptop.caracteristiquesLaptop"
+                       name="caracteristiquesLaptop"
+                       class="form-control"
+                       placeholder="Ex: Intel Core i7-13700H, 32 Go RAM, 1 To NVMe, RTX 4060">
+                
+                <!-- Quick Spec Insertion Chips -->
+                <div class="mt-2">
+                  <span class="text-muted small me-2" style="font-size: 0.74rem;">Insérer un composant :</span>
+                  <div class="d-inline-flex flex-wrap gap-1 mt-1">
+                    @for(chip of quickSpecs; track chip) {
+                      <button type="button"
+                              (click)="appendSpec(chip)"
+                              class="spec-chip border bg-white"
+                              style="cursor: pointer; font-size: 0.72rem;">
+                        + {{chip}}
+                      </button>
+                    }
+                  </div>
+                </div>
+              </div>
+
+              <!-- Image Upload Bay -->
+              <div class="col-12">
+                <label>Visuel Principal du Matériel</label>
+                <div class="upload-dropzone position-relative">
+                  <input type="file"
+                         (change)="onImageUpload($event)"
+                         name="logo"
+                         class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer"
+                         accept="image/*">
+                  <div class="py-2">
+                    <span class="fs-3 d-block mb-1">📸</span>
+                    <strong class="d-block text-dark small">Cliquez ou déposez une image ici</strong>
+                    <span class="text-muted small" style="font-size: 0.76rem;">PNG, JPG ou WEBP (ratio recommandé 16:10)</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Action Bar -->
+              <div class="col-12 pt-3 mt-2 border-top d-flex gap-2">
+                <button type="submit"
+                        [disabled]="!newLaptop.brandLaptop || !newLaptop.prixLaptop"
+                        class="btn btn-primary px-4">
+                  Ajouter au catalogue
+                </button>
+                <a routerLink="/laptops" class="btn btn-secondary">
+                  Annuler
+                </a>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
 
-    <div class="col-sm-4 col-md-4 col-lg-4">
-      <label>Marque Laptop</label>
-      <input type="text" [(ngModel)]="newLaptop.brandLaptop" name="brandLaptop" class="form-control">
-    </div>
+    <!-- RIGHT COLUMN: Sticky Live Blueprint Preview Card -->
+    <div class="col-lg-5">
+      <div class="card p-3 sticky-top" style="top: 84px;">
+        <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
+          <span class="kicker mb-0">APERÇU EN TEMPS RÉEL</span>
+          <span class="badge tone-olive">Fiche en cours</span>
+        </div>
 
-    <div class="col-sm-2 col-md-2 col-lg-2">
-      <label>Prix Laptop</label>
-      <input type="number" [(ngModel)]="newLaptop.prixLaptop" name="prixLaptop" class="form-control">
-    </div>
+        <article class="hardware-card border">
+          <div class="hardware-card__bay">
+            @if(imagePath) {
+              <img [src]="imagePath" alt="Aperçu sélectionné">
+            } @else {
+              <div class="d-flex flex-column align-items-center justify-content-center h-100 text-muted p-4">
+                <span class="fs-1 mb-1">💻</span>
+                <span class="small font-mono">En attente de visuel...</span>
+              </div>
+            }
+            <span class="position-absolute top-0 end-0 m-2 model-badge tone-sea border border-white">
+              {{getSelectedModelName()}}
+            </span>
+          </div>
 
-    <div class="col-sm-4 col-md-4 col-lg-4">
-      <label>Caractéristiques Laptop</label>
-      <input type="text" [(ngModel)]="newLaptop.caracteristiquesLaptop" name="caracteristiquesLaptop" class="form-control">
-    </div>
+          <div class="hardware-card__body">
+            <div class="hardware-card__head">
+              <div>
+                <span class="kicker mb-0 font-mono">NOUVELLE ENTRÉE</span>
+                <h3 class="hardware-card__brand">
+                  {{newLaptop.brandLaptop || 'Nom du Laptop'}}
+                </h3>
+              </div>
+              <div class="price-tag">
+                {{(newLaptop.prixLaptop || 0) | number:'1.2-2'}} DZD
+              </div>
+            </div>
 
-    <div class="col-sm-4 col-md-4 col-lg-4">
-      <label>Date création</label>
-      <input type="date" [(ngModel)]="newLaptop.dateCreation" name="dateCreation" class="form-control">
-    </div>
+            <div class="spec-chips my-1">
+              @for(spec of parseSpecs(newLaptop.caracteristiquesLaptop); track $index) {
+                <span class="spec-chip">⚙ {{spec}}</span>
+              }
+              @if(parseSpecs(newLaptop.caracteristiquesLaptop).length === 0) {
+                <span class="spec-chip text-muted">Spécifications...</span>
+              }
+            </div>
 
-    <div class="col-sm-4 col-md-4 col-lg-4">
-      <label>Modèle</label>
-      <select class="form-control form-control-lg" id="idModel" name="idModel" [(ngModel)]="newIdModel">
-        @for(m of models; track m.idModel) {
-          <option [value]="m.idModel"> {{m.nomModel}} </option>
-        }
-      </select>
+            <div class="pt-2 mt-auto border-top">
+              <span class="text-muted font-mono small" style="font-size: 0.74rem;">
+                Mise en service : {{newLaptop.dateCreation | date:'dd/MM/yyyy'}}
+              </span>
+            </div>
+          </div>
+        </article>
+      </div>
     </div>
-
-    <div class="col-sm-16 col-md-16 col-lg-16">
-      <label class="mb-2">Image :</label>
-      <input type="file" (change)="onImageUpload($event)" name="logo" class="form-control">
-    </div>
-
-    <div class="col-sm-16 col-md-16 col-lg-16">
-      <img [src]="imagePath" class="card-img-top img-fluid rounded-start"
-           style="width: 500px; height: 300px" />
-    </div>
-
-    <div class="mt-2">
-      <button type="submit" (click)="addLaptop()" class="btn btn-success">Ajouter</button>
-    </div>
-  </form>
+  </div>
 </div>

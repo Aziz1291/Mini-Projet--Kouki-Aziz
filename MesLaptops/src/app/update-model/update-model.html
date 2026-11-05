@@ -1,20 +1,41 @@
-<form>
-  <div [hidden]="ajout">
-    <label>ID Modèle</label>
-    <input type="text" [(ngModel)]="model.idModel" name="idModel"
-           class="form-control w-25" disabled>
+<form (ngSubmit)="saveModel()">
+  @if(!ajout) {
+    <div class="mb-3">
+      <label>Identifiant Série</label>
+      <input type="text"
+             [value]="'#' + model.idModel"
+             class="form-control font-mono bg-light text-muted"
+             disabled>
+    </div>
+  }
+
+  <div class="mb-3">
+    <label for="nomModel">Désignation du Modèle</label>
+    <input type="text"
+           id="nomModel"
+           [(ngModel)]="model.nomModel"
+           name="nomModel"
+           class="form-control form-control-lg"
+           placeholder="Ex: ThinkPad, XPS, MacBook Pro, ZenBook..."
+           required>
+    <span class="text-muted small mt-1 d-block" style="font-size: 0.76rem;">
+      Cette étiquette servira de filtre catégoriel pour le parc.
+    </span>
   </div>
-  <div>
-    <label>Nom Modèle</label>
-    <input type="text" [(ngModel)]="model.nomModel" name="nomModel" class="form-control"
-           placeholder="Entrez un nom de modèle...">
-  </div>
-  <div class="mt-2">
-    <button type="submit" [disabled]="!model.nomModel" class="btn btn-success"
-            (click)="saveModel()">{{ajout ? 'Ajouter' : 'Modifier'}}</button>
+
+  <div class="d-flex gap-2 pt-2 border-top">
+    <button type="submit"
+            [disabled]="!model.nomModel"
+            class="btn btn-primary px-3">
+      {{ajout ? '+ Créer le modèle' : 'Enregistrer les modifications'}}
+    </button>
+
     @if(!ajout) {
-      <button type="button" class="btn btn-secondary ms-2"
-              (click)="cancel()">Annuler</button>
+      <button type="button"
+              class="btn btn-secondary"
+              (click)="cancel()">
+        Annuler
+      </button>
     }
   </div>
 </form>
