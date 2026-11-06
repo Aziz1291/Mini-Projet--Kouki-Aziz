@@ -10,6 +10,7 @@ import { Router, RouterLink } from '@angular/router';
 import { User } from '../model/user.model';
 import { AuthService } from '../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { timeout } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -43,7 +44,7 @@ export class Register implements OnInit {
     this.user.username = this.myForm.value.username;
     this.user.email    = this.myForm.value.email;
     this.user.password = this.myForm.value.password;
-    this.authService.registerUser(this.user).subscribe({
+    this.authService.registerUser(this.user).pipe(timeout(45000)).subscribe({
       next: (res) => {
         this.authService.setRegistredUser(this.user);
         this.loading = false;
@@ -54,10 +55,13 @@ export class Register implements OnInit {
         this.loading = false;
         if (err.status === 400) {
           this.err = err.error?.message || "Email already used!";
+        } else if (err.name === 'TimeoutError' || err.status === 0 || err.status >= 500) {
+          this.err = "Le service d'inscription ne répond pas. Le compte a peut-être été créé : vérifiez vos e-mails avant de réessayer ou contactez le responsable de la démonstration.";
         } else {
-          this.err = "Une erreur est survenue.";
+          this.err = "L'inscription n'a pas pu être terminée. Vérifiez vos informations et réessayez.";
         }
       },
     });
   }
 }
+
