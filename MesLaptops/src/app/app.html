@@ -1,17 +1,18 @@
 @if (!acknowledged && !privacyPage) {
-  <main class="notice-shell"><section class="notice-card" aria-labelledby="notice-title">
-    <p class="notice-kicker">LAPTOPSTORE · DÉMONSTRATION</p><h1 id="notice-title">Avant de commencer</h1>
-    <p>Cette démonstration utilise le stockage du navigateur pour la connexion et pour mémoriser cet avis pendant votre session. Un compte demande un nom d’utilisateur, une adresse e-mail et un mot de passe.</p>
-    <p>Consultez la <a routerLink="/privacy">politique de confidentialité et de stockage</a> avant de poursuivre. N’utilisez pas un mot de passe que vous utilisez ailleurs.</p>
-    <button class="btn btn-primary" type="button" (click)="acknowledge()">J’ai compris et je continue</button>
+  <div class="privacy-overlay"><section class="privacy-modal" role="dialog" aria-modal="true" aria-labelledby="notice-title">
+    <p class="notice-kicker">LAPTOPSTORE · DÉMONSTRATION</p>
+    <h1 id="notice-title">Avant de commencer</h1>
+    <p>Cette démonstration utilise le stockage du navigateur pour la connexion. Évitez les données sensibles et les mots de passe utilisés ailleurs.</p>
+    <label class="privacy-check"><input type="checkbox" [checked]="policyChecked" (change)="policyChecked = !policyChecked"> <span>J’ai lu la <a routerLink="/privacy">politique de confidentialité et de stockage</a>.</span></label>
+    <button class="btn btn-primary" type="button" [disabled]="!policyChecked" (click)="acknowledge()">Continuer</button>
     <p class="notice-small"><a href="https://azizkouki.com/">Quitter la démonstration</a></p>
-  </section></main>
+  </section></div>
 } @else {
 <nav class="navbar navbar-expand-lg">
   <div class="container-fluid px-3 px-lg-4">
     <a class="navbar-brand" routerLink="/laptops">
       <span class="brand-kicker">
-        <span class="status-dot"></span>
+        
         HARDWARE // INVENTORY
       </span>
       <span class="brand-title">LaptopStore</span>
@@ -58,7 +59,7 @@
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle p-0 d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               <span class="user-identity-chip">
-                <span>👤 {{authService.loggedUser}}</span>
+                <span>{{authService.loggedUser}}</span>
                 @if(authService.isAdmin()) {
                   <span class="badge-admin">ADMIN</span>
                 }
@@ -85,4 +86,8 @@
 <router-outlet />
 
 <footer class="privacy-footer"><a routerLink="/privacy">Confidentialité et stockage</a></footer>
+}
+
+@if (cookieNotice && !privacyPage) {
+  <aside class="storage-bar" aria-label="Information sur le stockage"><p>Cette démonstration utilise le stockage du navigateur nécessaire à la connexion et aux avis. <a routerLink="/privacy">En savoir plus</a></p><button type="button" (click)="dismissCookieNotice()">Accepter le stockage nécessaire</button></aside>
 }

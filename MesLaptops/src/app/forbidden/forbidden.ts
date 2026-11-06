@@ -11,7 +11,7 @@ import { RouterLink } from '@angular/router';
         <div class="col-md-7 col-lg-5">
           <div class="auth-wrapper text-center">
             <span class="kicker font-mono text-danger mb-2">ACCESS CONTROL // ERR_FORBIDDEN_403</span>
-            <div class="mb-3 fs-1 text-danger">🛡</div>
+            <div class="mb-3 fs-1 text-danger"></div>
             <h3 class="mb-2">Accès Non Autorisé</h3>
             <p class="text-muted small mb-4">
               Vos privilèges actuels ne vous permettent pas d'administrer ou de modifier cette ressource. 

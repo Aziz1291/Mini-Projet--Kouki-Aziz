@@ -5,6 +5,7 @@ import { LaptopService } from '../services/laptop.service';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { environment } from '../../environments/environment';
+import { timeout } from 'rxjs';
 
 @Component({
   selector: 'app-laptops',
@@ -15,6 +16,7 @@ import { environment } from '../../environments/environment';
 })
 export class Laptops implements OnInit {
   laptops?: Laptop[];
+  loadError = false;
   viewMode: 'grid' | 'table' = 'grid';
 
   apiurl: string = environment.laptopsApiURL;
@@ -31,8 +33,11 @@ export class Laptops implements OnInit {
 
   chargerLaptops() {
     this.ts = Date.now();
-    this.laptopService.listeLaptops().subscribe(laptops => {
-      this.laptops = laptops;
+    this.loadError = false;
+    this.laptops = undefined;
+    this.laptopService.listeLaptops().pipe(timeout(45000)).subscribe({
+      next: laptops => { this.laptops = laptops; },
+      error: () => { this.loadError = true; }
     });
   }
 

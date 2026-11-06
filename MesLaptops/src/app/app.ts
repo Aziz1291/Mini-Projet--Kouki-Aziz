@@ -12,8 +12,15 @@ import { AuthService } from './services/auth.service';
 export class App implements OnInit {
   title = 'Mes Laptops';
   acknowledged = false;
+  policyChecked = false;
+  cookieNotice = true;
+  dismissCookieNotice(): void {
+    this.cookieNotice = false;
+    try { sessionStorage.setItem('laptopstore_storage_notice', '1'); } catch {}
+  }
   get privacyPage(): boolean { return this.router.url.split('?')[0] === '/privacy'; }
   acknowledge(): void {
+    if (!this.policyChecked) return;
     this.acknowledged = true;
     try { sessionStorage.setItem('laptopstore_notice', '1'); } catch {}
     this.startApp();
@@ -24,6 +31,7 @@ export class App implements OnInit {
 
   ngOnInit () {
     try { this.acknowledged = sessionStorage.getItem('laptopstore_notice') === '1'; } catch {}
+    try { this.cookieNotice = sessionStorage.getItem('laptopstore_storage_notice') !== '1'; } catch {}
     if (this.acknowledged) this.startApp();
   }
   private startApp(): void {
