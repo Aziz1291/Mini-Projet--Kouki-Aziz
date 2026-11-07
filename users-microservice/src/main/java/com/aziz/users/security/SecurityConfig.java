@@ -28,7 +28,12 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        List<String> allowedOrigins = Arrays.asList(allowedOriginsRaw.split(","));
+        List<String> allowedOrigins = new java.util.ArrayList<>();
+        // Always allow the portfolio proxy origins, whatever ALLOWED_ORIGINS is set to on the host.
+        for (String o : (allowedOriginsRaw + ",https://azizkouki.com,https://www.azizkouki.com").split(",")) {
+            String origin = o.trim();
+            if (!origin.isEmpty() && !allowedOrigins.contains(origin)) allowedOrigins.add(origin);
+        }
 
         http.sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

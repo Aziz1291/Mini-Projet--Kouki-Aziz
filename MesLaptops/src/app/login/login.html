@@ -14,6 +14,12 @@
           </div>
         }
 
+        @if(waking) {
+          <div class="alert alert-info mb-4" role="status">
+            Le serveur démarre (jusqu’à 2 minutes sur l’hébergement gratuit), veuillez patienter. Nouvelle tentative automatique…
+          </div>
+        }
+
         <form (ngSubmit)="onLoggedin()">
           <div class="form-group mb-3">
             <label for="username">Identifiant / Nom d'utilisateur</label>

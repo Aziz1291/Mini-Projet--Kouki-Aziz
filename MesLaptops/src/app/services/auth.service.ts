@@ -85,12 +85,17 @@ export class AuthService {
     return this.roles.indexOf('ADMIN') >= 0;
   }
 
-  logout() {
+  /** Forgets the session without navigating (used by guards and the interceptor). */
+  clearSession() {
     this.loggedUser  = undefined!;
     this.roles       = undefined!;
     this.token       = undefined!;
     this.isloggedIn  = false;
-    localStorage.removeItem('jwt');
+    try { localStorage.removeItem('jwt'); } catch {}
+  }
+
+  logout() {
+    this.clearSession();
     this.router.navigate(['/login']);
   }
 

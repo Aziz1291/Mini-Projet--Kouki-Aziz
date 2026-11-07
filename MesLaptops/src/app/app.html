@@ -2,9 +2,10 @@
   <div class="privacy-overlay"><section class="privacy-modal" role="dialog" aria-modal="true" aria-labelledby="notice-title">
     <p class="notice-kicker">LAPTOPSTORE · DÉMONSTRATION</p>
     <h1 id="notice-title">Avant de commencer</h1>
-    <p>Cette démonstration utilise le stockage du navigateur pour la connexion. Évitez les données sensibles et les mots de passe utilisés ailleurs.</p>
-    <label class="privacy-check"><input type="checkbox" [checked]="policyChecked" (change)="policyChecked = !policyChecked"> <span>J’ai lu la <a routerLink="/privacy">politique de confidentialité et de stockage</a>.</span></label>
-    <button class="btn btn-primary" type="button" [disabled]="!policyChecked" (click)="acknowledge()">Continuer</button>
+    <p>Cette démonstration utilise le stockage du navigateur (jeton de connexion, mémorisation de cet avis) pour la connexion. Évitez les données sensibles et les mots de passe utilisés ailleurs. Tant que vous n’avez pas accepté, la connexion et le reste de l’application restent inaccessibles.</p>
+    <label class="privacy-check"><input type="checkbox" [checked]="policyChecked" (change)="policyChecked = !policyChecked"> <span>J’ai lu la <a routerLink="/privacy">politique de confidentialité et de stockage</a> et j’accepte le stockage nécessaire (cookies et stockage du navigateur).</span></label>
+    <div class="d-flex gap-2 flex-wrap"><button class="btn btn-primary" type="button" [disabled]="!policyChecked" (click)="acknowledge()">Accepter et continuer</button> <button class="btn btn-outline-secondary" type="button" (click)="decline()">Refuser</button></div>
+    @if (declined) { <p class="notice-small" role="alert">Sans votre accord, l’application reste inaccessible. Lisez la politique de confidentialité puis acceptez pour continuer.</p> }
     <p class="notice-small"><a href="https://azizkouki.com/">Quitter la démonstration</a></p>
   </section></div>
 } @else {
@@ -79,8 +80,4 @@
 <router-outlet />
 
 <footer class="privacy-footer"><a routerLink="/privacy">Confidentialité et stockage</a></footer>
-}
-
-@if (cookieNotice && !privacyPage) {
-  <aside class="storage-bar" aria-label="Information sur le stockage"><p>Cette démonstration utilise le stockage du navigateur nécessaire à la connexion et aux avis. <a routerLink="/privacy">En savoir plus</a></p><button type="button" (click)="dismissCookieNotice()">Accepter le stockage nécessaire</button></aside>
 }

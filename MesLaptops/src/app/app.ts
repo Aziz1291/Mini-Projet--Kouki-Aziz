@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from './services/auth.service';
+import { ConsentService } from './services/consent.service';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -13,40 +15,47 @@ export class App implements OnInit {
   title = 'Mes Laptops';
   acknowledged = false;
   policyChecked = false;
-  cookieNotice = true;
-  dismissCookieNotice(): void {
-    this.cookieNotice = false;
-    try { sessionStorage.setItem('laptopstore_storage_notice', '1'); } catch {}
-  }
+  declined = false;
+  private pendingUrl = '/';
+
   get privacyPage(): boolean { return this.router.url.split('?')[0] === '/privacy'; }
-  acknowledge(): void {
-    if (!this.policyChecked) return;
-    this.acknowledged = true;
-    try { sessionStorage.setItem('laptopstore_notice', '1'); } catch {}
-    this.startApp();
-  }
+
   constructor (public authService: AuthService,
                private router: Router,
-  ) {}
+               private consent: ConsentService) {}
 
   ngOnInit () {
-    try { this.acknowledged = sessionStorage.getItem('laptopstore_notice') === '1'; } catch {}
-    try { this.cookieNotice = sessionStorage.getItem('laptopstore_storage_notice') !== '1'; } catch {}
+    this.pendingUrl = window.location.hash.replace(/^#/, '') || '/';
+    this.acknowledged = this.consent.accepted;
     if (this.acknowledged) this.startApp();
   }
+
+  acknowledge(): void {
+    if (!this.policyChecked) return;
+    this.consent.accept();
+    this.acknowledged = true;
+    this.declined = false;
+    this.startApp();
+    const target = /^\/(privacy|consent)/.test(this.pendingUrl) ? '/login' : this.pendingUrl;
+    this.router.navigateByUrl(target);
+  }
+
+  decline(): void { this.declined = true; }
+
   private startApp(): void {
     this.authService.loadToken();
-    const guestRoutes = ['/login', '/register', '/verifEmail', '/verif-email', '/forbidden', '/app-forbidden', '/privacy'];
-    const hash = window.location.hash.replace(/^#/, '');
-    const isGuestRoute = guestRoutes.some(route => hash.startsWith(route));
+    this.wakeServices();
+  }
 
-    if (!isGuestRoute && (this.authService.getToken() == null || this.authService.isTokenExpired())) {
-      this.router.navigate(['/login']);
+  /** The free hosting sleeps when idle: wake both services as soon as the visitor has accepted. */
+  private wakeServices(): void {
+    const urls = [environment.usersApiURL + '/login', environment.laptopsApiURL + '/all'];
+    for (const u of urls) {
+      try { fetch(u, { method: 'GET', mode: 'no-cors', cache: 'no-store' }).catch(() => {}); } catch {}
     }
   }
 
   onLogout(){
-    console.log("logout-------1");
     this.authService.logout();
   }
 }

@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { timeout } from 'rxjs';
+import { retry, throwError, timeout, timer } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -19,6 +19,7 @@ export class Login implements OnInit {
   message: string = 'Identifiant ou mot de passe incorrect.';
   showPassword: boolean = false;
   loading: boolean = false;
+  waking: boolean = false;
 
   constructor(private authService: AuthService,
               private router: Router) { }
@@ -38,9 +39,23 @@ export class Login implements OnInit {
     if (this.loading) return;
     this.erreur = 0;
     this.loading = true;
-    this.authService.login(this.user).pipe(timeout(45000)).subscribe({
+    this.waking = false;
+    // The free host can take up to ~2 minutes to wake: retry quietly and say so.
+    this.authService.login(this.user).pipe(
+      timeout(30000),
+      retry({
+        count: 8,
+        delay: (err: any) => {
+          const status = err?.status;
+          if (typeof status === 'number' && status >= 400 && status < 500) return throwError(() => err);
+          this.waking = true;
+          return timer(3000);
+        }
+      })
+    ).subscribe({
       next: (data) => {
         this.loading = false;
+        this.waking = false;
         const jwToken = data.headers.get('Authorization') || data.headers.get('authorization') || (data.body as any)?.token || (data.body as any)?.jwt;
         if (jwToken) {
           this.authService.saveToken(jwToken);
@@ -52,6 +67,7 @@ export class Login implements OnInit {
       },
       error: (err: any) => {
         this.loading = false;
+        this.waking = false;
         this.erreur = 1;
         if (err.error && err.error.errorCause === 'disabled') {
           this.message = 'Compte désactivé. Veuillez contacter votre administrateur.';
