@@ -22,6 +22,7 @@
                        name="brandLaptop"
                        class="form-control"
                        placeholder="Ex: Lenovo ThinkPad P16, MacBook Pro..."
+                       [attr.maxlength]="brandMax"
                        required>
               </div>
 
@@ -44,6 +45,8 @@
                        name="prixLaptop"
                        class="form-control font-mono"
                        placeholder="Ex: 185000"
+                       min="1"
+                       [attr.max]="priceMax"
                        required>
               </div>
 
@@ -54,6 +57,7 @@
                        id="dateCreation"
                        [(ngModel)]="newLaptop.dateCreation"
                        name="dateCreation"
+                       [attr.max]="today"
                        class="form-control font-mono">
               </div>
 
@@ -65,7 +69,8 @@
                        [(ngModel)]="newLaptop.caracteristiquesLaptop"
                        name="caracteristiquesLaptop"
                        class="form-control"
-                       placeholder="Ex: Intel Core i7-13700H, 32 Go RAM, 1 To NVMe, RTX 4060">
+                       placeholder="Ex: Intel Core i7-13700H, 32 Go RAM, 1 To NVMe, RTX 4060"
+                       [attr.maxlength]="specsMax">
                 
                 <!-- Quick Spec Insertion Chips -->
                 <div class="mt-2">
@@ -91,21 +96,34 @@
                          (change)="onImageUpload($event)"
                          name="logo"
                          class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer"
-                         accept="image/*">
+                         accept="image/jpeg,image/png,image/gif,image/webp">
                   <div class="py-2">
                     <span class="fs-3 d-block mb-1">📸</span>
                     <strong class="d-block text-dark small">Cliquez ou déposez une image ici</strong>
-                    <span class="text-muted small" style="font-size: 0.76rem;">PNG, JPG ou WEBP (ratio recommandé 16:10)</span>
+                    <span class="text-muted small" style="font-size: 0.76rem;">PNG, JPG, GIF ou WEBP, 5 Mo maximum (ratio recommandé 16:10)</span>
                   </div>
                 </div>
+                @if (imageError) {
+                  <div class="text-danger small mt-1" role="alert">{{ imageError }}</div>
+                }
               </div>
+
+              <!-- Problems that keep the form from being saved -->
+              @if (problems.length || serverError) {
+                <div class="col-12">
+                  <ul class="text-danger small mb-0 ps-3" role="alert">
+                    @for (problem of problems; track problem) { <li>{{ problem }}</li> }
+                    @if (serverError) { <li>{{ serverError }}</li> }
+                  </ul>
+                </div>
+              }
 
               <!-- Action Bar -->
               <div class="col-12 pt-3 mt-2 border-top d-flex gap-2">
                 <button type="submit"
-                        [disabled]="!newLaptop.brandLaptop || !newLaptop.prixLaptop"
+                        [disabled]="problems.length > 0 || saving"
                         class="btn btn-primary px-4">
-                  Ajouter au catalogue
+                  {{ saving ? 'Enregistrement…' : 'Ajouter au catalogue' }}
                 </button>
                 <a routerLink="/laptops" class="btn btn-secondary">
                   Annuler

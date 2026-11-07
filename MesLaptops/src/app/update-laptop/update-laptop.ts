@@ -5,6 +5,7 @@ import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { Image, Laptop, Model } from '../model/laptop.model';
 import { LaptopService } from '../services/laptop.service';
 import { environment } from '../../environments/environment';
+import { apiErrorMessage, BRAND_MAX, imageProblem, laptopProblems, PRICE_MAX, SPECS_MAX } from '../model/laptop-rules';
 
 @Component({
   selector: 'app-update-laptop',
@@ -22,6 +23,18 @@ export class UpdateLaptop implements OnInit {
 
   uploadedImage!: File;
   isImageUpdated: Boolean = false;
+
+  readonly brandMax = BRAND_MAX;
+  readonly specsMax = SPECS_MAX;
+  readonly priceMax = PRICE_MAX;
+  readonly today = new Date().toISOString().slice(0, 10);
+  saving = false;
+  serverError = '';
+  imageError = '';
+
+  get problems(): string[] {
+    return laptopProblems(this.currentLaptop, !!this.updatedModelId);
+  }
 
   quickSpecs: string[] = [
     'Intel Core i7',
@@ -72,28 +85,26 @@ export class UpdateLaptop implements OnInit {
   }
 
   updateLaptop() {
+    if (this.saving || this.problems.length) return;
+    this.saving = true;
+    this.serverError = '';
+    this.currentLaptop.brandLaptop = (this.currentLaptop.brandLaptop ?? '').trim();
     this.currentLaptop.model = this.models.find(m => m.idModel == this.updatedModelId)!;
+    const save = () => this.laptopService.updateLaptop(this.currentLaptop).subscribe({
+      next: () => this.router.navigate(['laptops']),
+      error: (error) => {
+        this.saving = false;
+        this.serverError = apiErrorMessage(error);
+      }
+    });
     if (this.isImageUpdated && this.uploadedImage) {
       this.laptopService.uploadImageFS(
         this.uploadedImage,
         this.uploadedImage.name,
         this.currentLaptop.idLaptop
-      ).subscribe({
-        next: () => {
-          this.laptopService.updateLaptop(this.currentLaptop).subscribe(() => {
-            this.router.navigate(['laptops']);
-          });
-        },
-        error: () => {
-          this.laptopService.updateLaptop(this.currentLaptop).subscribe(() => {
-            this.router.navigate(['laptops']);
-          });
-        }
-      });
+      ).subscribe({ next: save, error: save });
     } else {
-      this.laptopService.updateLaptop(this.currentLaptop).subscribe(() => {
-        this.router.navigate(['laptops']);
-      });
+      save();
     }
   }
 
@@ -113,7 +124,13 @@ export class UpdateLaptop implements OnInit {
 
   onImageUpload(event: any) {
     if (event.target.files && event.target.files.length) {
-      this.uploadedImage = event.target.files[0];
+      const file: File = event.target.files[0];
+      this.imageError = imageProblem(file) ?? '';
+      if (this.imageError) {
+        event.target.value = '';
+        return;
+      }
+      this.uploadedImage = file;
       this.isImageUpdated = true;
       const reader = new FileReader();
       reader.readAsDataURL(this.uploadedImage);

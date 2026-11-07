@@ -11,8 +11,8 @@
       <a routerLink="/laptops" class="btn btn-secondary">
         ← Retour au parc
       </a>
-      <button type="button" (click)="updateLaptop()" class="btn btn-primary px-4">
-        Enregistrer les modifications
+      <button type="button" (click)="updateLaptop()" [disabled]="problems.length > 0 || saving" class="btn btn-primary px-4">
+        {{ saving ? 'Enregistrement…' : 'Enregistrer les modifications' }}
       </button>
     </div>
   </div>
@@ -44,6 +44,7 @@
                        [(ngModel)]="currentLaptop.brandLaptop"
                        name="brandLaptop"
                        class="form-control"
+                       [attr.maxlength]="brandMax"
                        required>
               </div>
 
@@ -54,6 +55,8 @@
                        [(ngModel)]="currentLaptop.prixLaptop"
                        name="prixLaptop"
                        class="form-control font-mono"
+                       min="1"
+                       [attr.max]="priceMax"
                        required>
               </div>
 
@@ -64,6 +67,7 @@
                        [ngModel]="currentLaptop.dateCreation | date: 'yyyy-MM-dd'"
                        (ngModelChange)="currentLaptop.dateCreation = $event"
                        name="dateCreation"
+                       [attr.max]="today"
                        class="form-control font-mono">
               </div>
 
@@ -84,7 +88,8 @@
                        [(ngModel)]="currentLaptop.caracteristiquesLaptop"
                        name="caracteristiquesLaptop"
                        class="form-control"
-                       placeholder="Ex: Intel Core i7, 32 Go RAM, 1 To NVMe">
+                       placeholder="Ex: Intel Core i7, 32 Go RAM, 1 To NVMe"
+                       [attr.maxlength]="specsMax">
 
                 <!-- Quick Spec Helper -->
                 <div class="mt-2">
@@ -101,6 +106,16 @@
                   </div>
                 </div>
               </div>
+
+              <!-- Problems that keep the form from being saved -->
+              @if (problems.length || serverError) {
+                <div class="col-12">
+                  <ul class="text-danger small mb-0 ps-3" role="alert">
+                    @for (problem of problems; track problem) { <li>{{ problem }}</li> }
+                    @if (serverError) { <li>{{ serverError }}</li> }
+                  </ul>
+                </div>
+              }
             </div>
           </form>
         </div>
@@ -127,7 +142,8 @@
           <div class="mb-4">
             <label>Remplacer ou ajouter un visuel</label>
             <div class="d-flex gap-2">
-              <input type="file" (change)="onImageUpload($event)" class="form-control form-control-sm">
+              <input type="file" (change)="onImageUpload($event)" class="form-control form-control-sm"
+                     accept="image/jpeg,image/png,image/gif,image/webp">
               <button type="button"
                       [disabled]="!uploadedImage"
                       (click)="onAddImageLaptop()"
@@ -135,6 +151,9 @@
                 + À la galerie
               </button>
             </div>
+            @if (imageError) {
+              <div class="text-danger small mt-1" role="alert">{{ imageError }}</div>
+            }
           </div>
 
           <!-- Multi-Image Gallery List -->

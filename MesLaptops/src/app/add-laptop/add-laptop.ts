@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { Laptop, Model } from '../model/laptop.model';
 import { LaptopService } from '../services/laptop.service';
+import { apiErrorMessage, BRAND_MAX, imageProblem, laptopProblems, PRICE_MAX, SPECS_MAX } from '../model/laptop-rules';
 
 @Component({
   selector: 'app-add-laptop',
@@ -18,6 +19,18 @@ export class AddLaptop implements OnInit {
 
   uploadedImage!: File;
   imagePath: any;
+
+  readonly brandMax = BRAND_MAX;
+  readonly specsMax = SPECS_MAX;
+  readonly priceMax = PRICE_MAX;
+  readonly today = new Date().toISOString().slice(0, 10);
+  saving = false;
+  serverError = '';
+  imageError = '';
+
+  get problems(): string[] {
+    return laptopProblems(this.newLaptop, !!this.newIdModel);
+  }
 
   quickSpecs: string[] = [
     'Intel Core i7',
@@ -66,23 +79,40 @@ export class AddLaptop implements OnInit {
   }
 
   addLaptop() {
+    // The button stays disabled while saving, so a double click adds one laptop, not two.
+    if (this.saving || this.problems.length) return;
+    this.saving = true;
+    this.serverError = '';
+    this.newLaptop.brandLaptop = (this.newLaptop.brandLaptop ?? '').trim();
     this.newLaptop.model = this.models.find(m => m.idModel == this.newIdModel)!;
-    this.laptopService.ajouterLaptop(this.newLaptop).subscribe((laptop) => {
-      if (this.uploadedImage) {
-        this.laptopService.uploadImageFS(this.uploadedImage, this.uploadedImage.name, laptop.idLaptop)
-          .subscribe({
-            next: () => this.router.navigate(['laptops']),
-            error: () => this.router.navigate(['laptops'])
-          });
-      } else {
-        this.router.navigate(['laptops']);
+    this.laptopService.ajouterLaptop(this.newLaptop).subscribe({
+      next: (laptop) => {
+        if (this.uploadedImage) {
+          this.laptopService.uploadImageFS(this.uploadedImage, this.uploadedImage.name, laptop.idLaptop)
+            .subscribe({
+              next: () => this.router.navigate(['laptops']),
+              error: () => this.router.navigate(['laptops'])
+            });
+        } else {
+          this.router.navigate(['laptops']);
+        }
+      },
+      error: (error) => {
+        this.saving = false;
+        this.serverError = apiErrorMessage(error);
       }
     });
   }
 
   onImageUpload(event: any) {
     if (event.target.files && event.target.files[0]) {
-      this.uploadedImage = event.target.files[0];
+      const file: File = event.target.files[0];
+      this.imageError = imageProblem(file) ?? '';
+      if (this.imageError) {
+        event.target.value = '';
+        return;
+      }
+      this.uploadedImage = file;
       const reader = new FileReader();
       reader.readAsDataURL(this.uploadedImage);
       reader.onload = (_event) => {
