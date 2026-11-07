@@ -764,3 +764,55 @@ label {
 .storage-bar { position:fixed; z-index:9999; bottom:0; left:0; right:0; display:flex; justify-content:center; align-items:center; gap:1rem; padding:.8rem 1rem; background:#fff; color:#172033; box-shadow:0 -2px 16px #0002; }
 .storage-bar p { margin:0; }
 @media(max-width:600px) { .storage-bar { align-items:flex-start; font-size:.85rem; } .privacy-overlay { padding-bottom:9rem; } }
+
+/* ==========================================================================
+   Phone layouts: tables become stacked cards, touch targets are 44px tall
+   ========================================================================== */
+@media (max-width: 640px) {
+  .stack-table, .stack-table tbody, .stack-table tr, .stack-table td { display: block; width: 100%; }
+  .stack-table thead { display: none; }
+  .stack-table tbody tr {
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .stack-table.table-striped > tbody > tr:nth-of-type(odd) > *,
+  .stack-table.table-striped > tbody > tr:hover > * { background-color: transparent !important; }
+  .stack-table > tbody > tr > td {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 0.4rem 0 !important;
+    border: 0 !important;
+    text-align: right !important;
+  }
+  .stack-table > tbody > tr > td[data-label]::before {
+    content: attr(data-label);
+    flex: 0 0 auto;
+    color: var(--muted);
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-align: left;
+  }
+  .stack-table .spec-chips { justify-content: flex-end; }
+  .stack-table > tbody > tr > td.cell-photo { justify-content: flex-start; }
+  .stack-table > tbody > tr > td.cell-photo img { width: 100% !important; height: 140px !important; }
+  .stack-table > tbody > tr > td.cell-title { justify-content: flex-start; font-size: 1.05rem; text-align: left !important; }
+  .stack-table > tbody > tr > td.cell-actions { justify-content: flex-end; gap: 0.5rem; padding-top: 0.75rem !important; }
+}
+
+@media (max-width: 640px), (pointer: coarse) {
+  .btn, .btn-sm, .facet-pill, .view-switcher button, button.spec-chip, .form-control, .form-select, .nav-link,
+  .navbar-toggler, .dropdown-item, .btn-link {
+    min-height: 44px;
+  }
+  .btn, .btn-sm, .facet-pill, .view-switcher button, button.spec-chip, .btn-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .nav-link { display: flex; align-items: center; }
+  .btn-link { min-width: 44px; }
+}

@@ -48,7 +48,7 @@
           </div>
 
           <div class="table-responsive">
-            <table class="table table-striped align-middle mb-0">
+            <table class="table table-striped align-middle mb-0 stack-table">
               <thead>
                 <tr>
                   <th style="width: 80px;">ID</th>
@@ -59,13 +59,13 @@
               <tbody>
                 @for(m of models; track m.idModel) {
                   <tr [class.table-active]="!ajout && updatedModel.idModel === m.idModel">
-                    <td class="font-mono text-muted small">#{{m.idModel}}</td>
-                    <td>
+                    <td class="font-mono text-muted small" data-label="ID">#{{m.idModel}}</td>
+                    <td class="cell-title">
                       <span class="model-badge tone-sea me-2">
                         {{m.nomModel}}
                       </span>
                     </td>
-                    <td style="text-align: right;">
+                    <td class="cell-actions" style="text-align: right;">
                       <button type="button" class="btn btn-sm btn-secondary me-1" (click)="updateMod(m)">
                         Modifier
                       </button>

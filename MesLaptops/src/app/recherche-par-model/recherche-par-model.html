@@ -125,7 +125,7 @@
       <div class="card">
         <div class="card-body p-0">
           <div class="table-responsive">
-            <table class="table table-striped align-middle mb-0">
+            <table class="table table-striped align-middle mb-0 stack-table">
               <thead>
                 <tr>
                   <th style="width: 70px;">ID</th>
@@ -140,26 +140,26 @@
               <tbody>
                 @for (laptop of laptops; track laptop.idLaptop) {
                   <tr>
-                    <td class="font-mono text-muted small">#{{laptop.idLaptop}}</td>
-                    <td>
+                    <td class="font-mono text-muted small" data-label="ID">#{{laptop.idLaptop}}</td>
+                    <td class="cell-photo">
                       <img loading="lazy" decoding="async" [src]="apiurl + '/image/getLastImageLaptop/' + laptop.idLaptop + '?t=' + ts"
                            style="height: 40px; width: 64px; object-fit: cover; border-radius: 4px; border: 1px solid var(--line); background: var(--tint);"
                            alt="{{laptop.brandLaptop}}"
                            onerror="this.onerror=null;this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI3MCIgaGVpZ2h0PSI0NCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iI2YxZjNmNyIvPjx0ZXh0IHg9IjUwJSIgeT0iNTUlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjYWFhIiBmb250LXNpemU9IjgiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIj5ObyBJbWc8L3RleHQ+PC9zdmc+'">
                     </td>
-                    <td><strong>{{laptop.brandLaptop}}</strong></td>
-                    <td><span class="price-badge">{{laptop.prixLaptop | number:'1.2-2'}} DZD</span></td>
-                    <td>
+                    <td class="cell-title"><strong>{{laptop.brandLaptop}}</strong></td>
+                    <td data-label="Prix"><span class="price-badge">{{laptop.prixLaptop | number:'1.2-2'}} DZD</span></td>
+                    <td data-label="Spécifications">
                       <div class="spec-chips">
                         @for(spec of parseSpecs(laptop.caracteristiquesLaptop); track $index) {
                           <span class="spec-chip">{{spec}}</span>
                         }
                       </div>
                     </td>
-                    <td>
+                    <td data-label="Modèle">
                       <span class="model-badge tone-sea">{{laptop.model.nomModel}}</span>
                     </td>
-                    <td class="text-muted font-mono small">{{laptop.dateCreation | date:'dd/MM/yyyy'}}</td>
+                    <td class="text-muted font-mono small" data-label="Créé le">{{laptop.dateCreation | date:'dd/MM/yyyy'}}</td>
                   </tr>
                 }
               </tbody>
