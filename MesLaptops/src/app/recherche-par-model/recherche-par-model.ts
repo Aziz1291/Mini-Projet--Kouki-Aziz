@@ -28,13 +28,25 @@ export class RechercheParModel implements OnInit {
 
   ngOnInit(): void {
     this.ts = Date.now();
-    this.laptopService.listeModels().subscribe(data => {
-      this.models = data._embedded.models;
-      // Preselect first model if available
-      if (this.models && this.models.length > 0) {
-        this.selectModel(this.models[0].idModel);
-      } else {
+    this.loadModels();
+  }
+
+  loadModels() {
+    this.loading = true;
+    this.loadError = false;
+    this.laptopService.listeModels().subscribe({
+      next: data => {
+        this.models = data._embedded.models;
+        // Preselect first model if available
+        if (this.models && this.models.length > 0) {
+          this.selectModel(this.models[0].idModel);
+        } else {
+          this.loading = false;
+        }
+      },
+      error: () => {
         this.loading = false;
+        this.loadError = true;
       }
     });
   }

@@ -30,6 +30,7 @@ export class UpdateLaptop implements OnInit {
   readonly today = new Date().toISOString().slice(0, 10);
   saving = false;
   notFound = false;
+  loaded = false;
   serverError = '';
   imageError = '';
 
@@ -70,6 +71,7 @@ export class UpdateLaptop implements OnInit {
           return;
         }
         this.currentLaptop = laptop;
+        this.loaded = true;
         if (laptop.model) {
           this.updatedModelId = laptop.model.idModel;
         }

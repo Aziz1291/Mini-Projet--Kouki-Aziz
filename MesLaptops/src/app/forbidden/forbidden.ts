@@ -10,7 +10,7 @@ import { RouterLink } from '@angular/router';
       <div class="row justify-content-center">
         <div class="col-md-7 col-lg-5">
           <div class="auth-wrapper text-center">
-            <span class="kicker font-mono text-danger mb-2">ACCESS CONTROL // ERR_FORBIDDEN_403</span>
+            <span class="kicker text-danger mb-2">Erreur 403 : accès refusé</span>
             <div class="mb-3 fs-1 text-danger"></div>
             <h3 class="mb-2">Accès Non Autorisé</h3>
             <p class="text-muted small mb-4">

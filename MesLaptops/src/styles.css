@@ -816,3 +816,10 @@ label {
   .nav-link { display: flex; align-items: center; }
   .btn-link { min-width: 44px; }
 }
+
+/* Tap targets of at least 44px on every screen size */
+.navbar-brand { min-height: 44px; justify-content: center; }
+.nav-link { min-height: 44px; display: flex; align-items: center; }
+.navbar-nav .dropdown-toggle { min-height: 44px; }
+.view-switcher button { min-height: 44px; padding: 0 14px; justify-content: center; }
+.privacy-footer a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 0.5rem; }

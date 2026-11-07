@@ -41,13 +41,13 @@
   @if(loading) {
     <div class="card p-5 text-center" role="status">
       <div class="spinner-border text-primary mx-auto mb-3"></div>
-      <p class="text-muted font-mono small mb-0">CHARGEMENT DES LAPTOPS...</p>
+      <p class="text-muted small mb-0">Chargement des laptops…</p>
     </div>
   } @else if(loadError) {
     <div class="card p-5 text-center" role="alert">
       <h4 class="mb-1">Chargement impossible</h4>
       <p class="text-muted small mb-3">Le catalogue ne répond pas pour le moment.</p>
-      <button type="button" class="btn btn-secondary mx-auto" (click)="onChange()">Réessayer</button>
+      <button type="button" class="btn btn-secondary mx-auto" (click)="models ? onChange() : loadModels()">Réessayer</button>
     </div>
   }
 
