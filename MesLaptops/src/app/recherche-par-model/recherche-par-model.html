@@ -2,7 +2,6 @@
   <!-- Header Deck -->
   <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
     <div>
-      <span class="kicker">CATEGORY FILTER // HARDWARE MODELS</span>
       <h2 class="mb-1">Filtrage par Gamme & Modèle</h2>
       <p class="text-muted small mb-0">Explorez les machines classées par série constructeur</p>
     </div>
@@ -36,15 +35,6 @@
           }
         </div>
       }
-
-      <!-- Fallback Dropdown for Large Catalogs -->
-      <div class="col-md-5 col-lg-4">
-        <select class="form-select" id="idModel" name="idModel" [(ngModel)]="IdModel" (change)="onChange()">
-          @for(m of models; track m.idModel) {
-            <option [value]="m.idModel">{{m.nomModel}}</option>
-          }
-        </select>
-      </div>
     </div>
   </div>
 

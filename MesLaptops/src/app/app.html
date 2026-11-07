@@ -11,14 +11,10 @@
 <nav class="navbar navbar-expand-lg">
   <div class="container-fluid px-3 px-lg-4">
     <a class="navbar-brand" routerLink="/laptops">
-      <span class="brand-kicker">
-        
-        HARDWARE // INVENTORY
-      </span>
       <span class="brand-title">LaptopStore</span>
     </a>
 
-    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Afficher ou masquer le menu">
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -60,9 +56,6 @@
             <a class="nav-link dropdown-toggle p-0 d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               <span class="user-identity-chip">
                 <span>{{authService.loggedUser}}</span>
-                @if(authService.isAdmin()) {
-                  <span class="badge-admin">ADMIN</span>
-                }
               </span>
             </a>
             <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="userDropdown">

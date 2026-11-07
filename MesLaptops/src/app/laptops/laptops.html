@@ -2,7 +2,6 @@
   <!-- Header Deck -->
   <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
     <div>
-      <span class="kicker">INVENTORY DISPATCH // HARDWARE CATALOG</span>
       <h2 class="mb-1 d-flex align-items-center gap-2">
         Parc Laptops & Stations Portables
         @if(laptops) {
@@ -22,10 +21,6 @@
           <span>☰</span> Tableau
         </button>
       </div>
-
-      <a routerLink="/rechercheParNom" class="btn btn-secondary btn-sm" title="Recherche rapide">
-        Filtrer
-      </a>
 
       @if(authService.isAdmin()) {
         <a routerLink="/add-laptop" class="btn btn-primary btn-sm">
