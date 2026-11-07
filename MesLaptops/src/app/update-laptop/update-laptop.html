@@ -1,4 +1,11 @@
 <div class="container">
+@if (notFound) {
+  <div class="card p-5 text-center mx-auto" style="max-width: 560px;" role="alert">
+    <h2 class="h4 mb-2">Laptop introuvable</h2>
+    <p class="text-muted mb-3">Aucun laptop ne porte cet identifiant. Il a peut-être été supprimé.</p>
+    <a routerLink="/laptops" class="btn btn-primary mx-auto">Retour au catalogue</a>
+  </div>
+} @else {
   <!-- Header Deck -->
   <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
     <div>
@@ -180,4 +187,5 @@
       </div>
     </div>
   </div>
+}
 </div>

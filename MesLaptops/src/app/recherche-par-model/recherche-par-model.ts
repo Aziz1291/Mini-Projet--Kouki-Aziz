@@ -17,6 +17,9 @@ export class RechercheParModel implements OnInit {
   IdModel!: number;
   models!: Model[];
   viewMode: 'grid' | 'table' = 'grid';
+  loading = true;
+  loadError = false;
+  private request = 0;
 
   apiurl: string = environment.laptopsApiURL;
   ts: number = Date.now();
@@ -30,6 +33,8 @@ export class RechercheParModel implements OnInit {
       // Preselect first model if available
       if (this.models && this.models.length > 0) {
         this.selectModel(this.models[0].idModel);
+      } else {
+        this.loading = false;
       }
     });
   }
@@ -41,8 +46,21 @@ export class RechercheParModel implements OnInit {
 
   onChange() {
     if (!this.IdModel) return;
-    this.laptopService.rechercherParModel(this.IdModel).subscribe(laptops => {
-      this.laptops = laptops;
+    const request = ++this.request;
+    this.loading = true;
+    this.loadError = false;
+    this.laptopService.rechercherParModel(this.IdModel).subscribe({
+      next: laptops => {
+        if (request !== this.request) return; // a newer model was chosen meanwhile
+        this.laptops = laptops;
+        this.loading = false;
+      },
+      error: () => {
+        if (request !== this.request) return;
+        this.laptops = [];
+        this.loading = false;
+        this.loadError = true;
+      }
     });
   }
 

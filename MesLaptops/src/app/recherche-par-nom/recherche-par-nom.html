@@ -73,10 +73,18 @@
 
   <!-- Results View -->
   @if(laptops) {
+    @let results = laptops | searchFilter: searchTerm;
+    @if(results.length === 0) {
+      <div class="card p-5 text-center" role="status">
+        <h4 class="mb-1">Aucun résultat</h4>
+        <p class="text-muted small mb-3">Aucun laptop ne correspond à « {{ searchTerm }} ».</p>
+        <button type="button" class="btn btn-secondary mx-auto" (click)="clearSearch()">Effacer la recherche</button>
+      </div>
+    }
     <!-- MODE A: GRID -->
-    @if(viewMode === 'grid') {
+    @if(viewMode === 'grid' && results.length) {
       <div class="hardware-grid">
-        @for (laptop of laptops | searchFilter: searchTerm; track laptop.idLaptop) {
+        @for (laptop of results; track laptop.idLaptop) {
           <article class="hardware-card">
             <div class="hardware-card__bay">
               <img loading="lazy" decoding="async" [src]="apiurl + '/image/getLastImageLaptop/' + laptop.idLaptop + '?t=' + ts"
@@ -122,7 +130,7 @@
     }
 
     <!-- MODE B: TABLE -->
-    @if(viewMode === 'table') {
+    @if(viewMode === 'table' && results.length) {
       <div class="card">
         <div class="card-body p-0">
           <div class="table-responsive">
@@ -139,7 +147,7 @@
                 </tr>
               </thead>
               <tbody>
-                @for (laptop of laptops | searchFilter: searchTerm; track laptop.idLaptop) {
+                @for (laptop of results; track laptop.idLaptop) {
                   <tr>
                     <td class="font-mono text-muted small">#{{laptop.idLaptop}}</td>
                     <td>

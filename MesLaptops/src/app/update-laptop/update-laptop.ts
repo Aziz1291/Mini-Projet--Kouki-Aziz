@@ -29,6 +29,7 @@ export class UpdateLaptop implements OnInit {
   readonly priceMax = PRICE_MAX;
   readonly today = new Date().toISOString().slice(0, 10);
   saving = false;
+  notFound = false;
   serverError = '';
   imageError = '';
 
@@ -62,12 +63,19 @@ export class UpdateLaptop implements OnInit {
     });
 
     const id = this.activatedRoute.snapshot.params['id'];
-    this.laptopService.consulterLaptop(id).subscribe(laptop => {
-      this.currentLaptop = laptop;
-      if (laptop.model) {
-        this.updatedModelId = laptop.model.idModel;
-      }
-      this.myImage = `${environment.laptopsApiURL}/image/loadfromFS/${laptop.idLaptop}?t=${Date.now()}`;
+    this.laptopService.consulterLaptop(id).subscribe({
+      next: laptop => {
+        if (!laptop) {
+          this.notFound = true;
+          return;
+        }
+        this.currentLaptop = laptop;
+        if (laptop.model) {
+          this.updatedModelId = laptop.model.idModel;
+        }
+        this.myImage = `${environment.laptopsApiURL}/image/loadfromFS/${laptop.idLaptop}?t=${Date.now()}`;
+      },
+      error: () => this.notFound = true
     });
   }
 
