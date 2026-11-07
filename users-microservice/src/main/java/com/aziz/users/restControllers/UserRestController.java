@@ -1,7 +1,10 @@
 package com.aziz.users.restControllers;
 
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.aziz.users.entities.User;
 import com.aziz.users.register.RegistrationRequest;
@@ -20,8 +23,10 @@ public class UserRestController {
     }
 
     @PostMapping("/register")
-    public User register(@RequestBody RegistrationRequest request) {
-        return userService.registerUser(request);
+    public ResponseEntity<Map<String, String>> register(@RequestBody RegistrationRequest request) {
+        // Temporary: the hosted demo cannot currently send verification email.
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body(Map.of("message", "Account registration is temporarily unavailable."));
     }
 
     @GetMapping("/verifyEmail/{token}")

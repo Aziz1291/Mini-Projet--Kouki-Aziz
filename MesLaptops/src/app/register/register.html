@@ -1,105 +1,12 @@
-<div class="container py-4">
+<div class="container py-5">
   <div class="row justify-content-center">
-    <div class="col-md-7 col-lg-5">
-      <div class="auth-wrapper">
-        <div class="auth-header">
-          <span class="kicker">ONBOARDING // NEW ACCOUNT</span>
-          <h3>Créer un compte</h3>
-          <p>Rejoignez la plateforme d'administration LaptopStore</p>
-        </div>
-
-        <form [formGroup]="myForm">
-          @if (err) {
-            <div class="alert alert-danger mb-3" role="alert">
-              <strong>Erreur d'inscription :</strong>
-              <div>{{err}}</div>
-            </div>
-          }
-
-          <div class="form-group mb-3">
-            <label for="username">Nom d'utilisateur</label>
-            <input type="text"
-                   id="username"
-                   name="username"
-                   class="form-control"
-                   formControlName="username"
-                   placeholder="Ex: j.dupont"
-                   autocomplete="username">
-            @if (myForm.controls['username'].hasError('required') && myForm.controls['username'].touched) {
-              <small class="text-danger d-block mt-1">L'identifiant est obligatoire.</small>
-            }
-          </div>
-
-          <div class="form-group mb-3">
-            <label for="email">Adresse Email Professionnelle</label>
-            <input type="email"
-                   id="email"
-                   name="email"
-                   class="form-control"
-                   formControlName="email"
-                   placeholder="nom@entreprise.com"
-                   autocomplete="email">
-            @if (myForm.controls['email'].hasError('required') && myForm.controls['email'].touched) {
-              <small class="text-danger d-block mt-1">L'adresse email est requise.</small>
-            }
-            @if (myForm.controls['email'].hasError('email') && myForm.controls['email'].touched) {
-              <small class="text-danger d-block mt-1">Veuillez saisir une adresse email valide.</small>
-            }
-          </div>
-
-          <div class="form-group mb-3">
-            <label for="password">Mot de passe</label>
-            <input type="password"
-                   id="password"
-                   name="password"
-                   formControlName="password"
-                   class="form-control font-mono"
-                   placeholder="Minimum 6 caractères"
-                   autocomplete="new-password">
-            @if (myForm.controls['password'].hasError('required') && myForm.controls['password'].touched) {
-              <small class="text-danger d-block mt-1">Le mot de passe est obligatoire.</small>
-            }
-            @if (myForm.controls['password'].hasError('minlength') && myForm.controls['password'].touched) {
-              <small class="text-danger d-block mt-1">Le mot de passe doit comporter au moins 6 caractères.</small>
-            }
-          </div>
-
-          <div class="form-group mb-4">
-            <label for="confirmPassword">Confirmer le mot de passe</label>
-            <input type="password"
-                   id="confirmPassword"
-                   name="confirmPassword"
-                   formControlName="confirmPassword"
-                   class="form-control font-mono"
-                   placeholder="Répétez le mot de passe"
-                   autocomplete="new-password">
-            @if (myForm.controls['confirmPassword'].hasError('required') && myForm.controls['confirmPassword'].touched) {
-              <small class="text-danger d-block mt-1">Veuillez confirmer votre mot de passe.</small>
-            }
-            @if (myForm.get('confirmPassword')?.touched && myForm.get('confirmPassword')?.value != myForm.get('password')?.value) {
-              <small class="text-danger d-block mt-1">Les mots de passe ne correspondent pas.</small>
-            }
-          </div>
-
-          <div class="d-grid mt-4">
-            <button type="button"
-                    [disabled]="myForm.invalid || loading"
-                    class="btn btn-primary py-2"
-                    (click)="onRegister()">
-              @if(loading) {
-                <span class="spinner-border spinner-border-sm me-2" role="status"></span>
-                Création en cours...
-              } @else {
-                Créer mon compte
-              }
-            </button>
-          </div>
-
-          <p class="text-muted small text-center mt-3 mb-0">
-            Déjà inscrit ? <a routerLink="/login">Se connecter</a>
-          </p>
-        </form>
-      </div>
+    <div class="col-md-6 col-lg-5">
+      <section class="auth-wrapper" aria-labelledby="registration-title">
+        <h1 id="registration-title" class="h3">Inscription temporairement indisponible</h1>
+        <p>La création de compte est temporairement désactivée pendant la maintenance du service de vérification par e-mail.</p>
+        <p>Vous pouvez découvrir la démonstration avec les comptes proposés sur la page de connexion.</p>
+        <a routerLink="/login" class="btn btn-primary">Retour à la connexion</a>
+      </section>
     </div>
   </div>
 </div>
