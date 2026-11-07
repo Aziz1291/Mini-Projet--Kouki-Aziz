@@ -92,7 +92,7 @@ public class ImageServiceImpl implements ImageService {
     public ResponseEntity<byte[]> getLastImageByLaptop(Long idLaptop) {
         Optional<Image> last = imageRepository.findTopByLaptopIdLaptopOrderByIdImageDesc(idLaptop);
         if (last.isEmpty() || last.get().getImage() == null) {
-            return ResponseEntity.notFound().build();
+            return ImagePlaceholder.response();
         }
         String type = last.get().getType() != null ? last.get().getType() : "image/jpeg";
         return ResponseEntity.ok()

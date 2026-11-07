@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import com.example.Laptops.entities.Image;
 import com.example.Laptops.entities.Laptop;
+import com.example.Laptops.service.ImagePlaceholder;
 import com.example.Laptops.service.ImageService;
 import com.example.Laptops.service.LaptopService;
 
@@ -36,15 +37,15 @@ public class ImageRestController {
         laptopService.saveLaptop(p);
     }
 
-    @RequestMapping(value = "/loadfromFS/{id}", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
+    @RequestMapping(value = "/loadfromFS/{id}", method = RequestMethod.GET)
     public ResponseEntity<byte[]> getImageFS(@PathVariable("id") Long id) throws IOException {
         Laptop p = laptopService.getLaptop(id);
         if (p == null || p.getImagePath() == null) {
-            return ResponseEntity.notFound().build();
+            return ImagePlaceholder.response();
         }
         java.nio.file.Path filePath = Paths.get(System.getProperty("user.home") + "/images/" + p.getImagePath());
         if (!Files.exists(filePath)) {
-            return ResponseEntity.notFound().build();
+            return ImagePlaceholder.response();
         }
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_JPEG)
