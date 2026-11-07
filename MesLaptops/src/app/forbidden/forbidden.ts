@@ -18,12 +18,6 @@ import { RouterLink } from '@angular/router';
               Cette opération requiert le rôle <strong>ADMIN</strong>.
             </p>
 
-            <div class="p-3 bg-light rounded border text-start mb-4 font-mono small">
-              <div class="text-muted">DIAGNOSTIC SYSTÈME :</div>
-              <div class="text-dark">Code : 403 FORBIDDEN</div>
-              <div class="text-dark">Scope : ADMIN_PRIVILEGES_REQUIRED</div>
-            </div>
-
             <div class="d-flex justify-content-center gap-2">
               <a routerLink="/laptops" class="btn btn-primary">
                 ← Retour au Catalogue
