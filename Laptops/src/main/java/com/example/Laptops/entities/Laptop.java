@@ -9,6 +9,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 
 @Entity
 public class Laptop {
@@ -17,11 +23,22 @@ public class Laptop {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long idLaptop;
 
+	@NotBlank(message = "La marque est obligatoire.")
+	@Size(max = 100, message = "La marque ne doit pas dépasser 100 caractères.")
 	private String brandLaptop;
+
+	@NotNull(message = "Le prix est obligatoire.")
+	@Positive(message = "Le prix doit être supérieur à 0.")
+	@DecimalMax(value = "10000000", message = "Le prix ne doit pas dépasser 10 000 000.")
 	private Double prixLaptop;
+
+	@Size(max = 1000, message = "Les caractéristiques ne doivent pas dépasser 1000 caractères.")
 	private String caracteristiquesLaptop;
+
+	@PastOrPresent(message = "La date de mise en service ne peut pas être dans le futur.")
 	private Date dateCreation;
 
+	@NotNull(message = "Le modèle est obligatoire.")
 	@ManyToOne
 	private Model model;
 

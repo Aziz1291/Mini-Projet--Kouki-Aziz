@@ -48,11 +48,13 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
             DecodedJWT decodedJWT = verifier.verify(jwt);
             String username = decodedJWT.getSubject();
-            List<String> roles = decodedJWT.getClaims().get("roles").asList(String.class);
+            List<String> roles = decodedJWT.getClaim("roles").asList(String.class);
 
             Collection<GrantedAuthority> authorities = new ArrayList<>();
-            for (String r : roles) {
-                authorities.add(new SimpleGrantedAuthority(r));
+            if (roles != null) {
+                for (String r : roles) {
+                    authorities.add(new SimpleGrantedAuthority(r));
+                }
             }
 
             UsernamePasswordAuthenticationToken authToken =
@@ -60,10 +62,9 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authToken);
 
         } catch (Exception e) {
+            // An invalid or expired token is treated as no token: public reads
+            // still work, and protected writes are refused by SecurityConfig.
             SecurityContextHolder.clearContext();
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Invalid or expired JWT: " + e.getMessage());
-            return;
         }
 
         filterChain.doFilter(request, response);

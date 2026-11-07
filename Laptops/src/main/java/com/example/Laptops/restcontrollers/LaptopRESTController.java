@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.Laptops.entities.Laptop;
 import com.example.Laptops.service.LaptopService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api")
 @CrossOrigin
@@ -36,14 +38,13 @@ public class LaptopRESTController {
 
 	@RequestMapping(value = "/addlaptop", method = RequestMethod.POST)
 	//@PostMapping("/addlaptop")
-	public Laptop createLaptop(@RequestBody Laptop laptop) {
-		System.out.println(laptop);
+	public Laptop createLaptop(@Valid @RequestBody Laptop laptop) {
 		return laptopService.saveLaptop(laptop);
 	}
 
 	@RequestMapping(value = "/updatelaptop", method = RequestMethod.PUT)
 	//@PutMapping("/updatelaptop")
-	public Laptop updateLaptop(@RequestBody Laptop laptop) {
+	public Laptop updateLaptop(@Valid @RequestBody Laptop laptop) {
 		return laptopService.updateLaptop(laptop);
 	}
 

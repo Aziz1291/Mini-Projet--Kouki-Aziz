@@ -9,6 +9,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
 public class Model {
@@ -16,7 +18,11 @@ public class Model {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long idModel;
 	
+	@NotBlank(message = "Le nom du modèle est obligatoire.")
+	@Size(max = 100, message = "Le nom du modèle ne doit pas dépasser 100 caractères.")
 	private String nomModel;
+
+	@Size(max = 500, message = "La description ne doit pas dépasser 500 caractères.")
 	private String descriptionModel;
 	
 	@OneToMany(mappedBy = "model")

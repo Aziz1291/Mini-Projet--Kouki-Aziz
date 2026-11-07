@@ -11,8 +11,9 @@ function shouldExclude(url: string): boolean {
 export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
 
-  if (!shouldExclude(req.url)) {
-    const jwt = authService.getToken();
+  const jwt = authService.getToken();
+  // Signed-out visitors send no Authorization header rather than "Bearer null".
+  if (jwt && !shouldExclude(req.url)) {
     const reqWithToken = req.clone({
       setHeaders: { Authorization: 'Bearer ' + jwt }
     });

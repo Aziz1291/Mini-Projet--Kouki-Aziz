@@ -6,15 +6,20 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
+import jakarta.servlet.DispatcherType;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableWebSecurity
@@ -43,17 +48,18 @@ public class SecurityConfig {
 		            return config;
 		        }
 		    }))
+		    // Visitors browse the catalog without signing in, so every read is public.
+		    // Any write (laptops, models, images, including the Spring Data REST
+		    // endpoints) needs an ADMIN token.
 		    .authorizeHttpRequests(requests -> requests
-		        .anyRequest().permitAll()
-		    );
-		    /*.requestMatchers("/api/all/**").hasAnyAuthority("ADMIN","USER")
-		    .requestMatchers("/api/getbyid/**").hasAnyAuthority("ADMIN","USER")
-		    .requestMatchers(HttpMethod.POST,"/api/addlaptop/**").hasAuthority("ADMIN")
-		    .requestMatchers(HttpMethod.PUT,"/api/updatelaptop/**").hasAuthority("ADMIN")
-		    .requestMatchers(HttpMethod.DELETE,"/api/dellaptop/**").hasAuthority("ADMIN")
-		    .requestMatchers("/models/**").hasAnyAuthority("ADMIN","USER")
-		    .anyRequest().authenticated()
-		    .addFilterBefore(new JWTAuthorizationFilter(), BasicAuthenticationFilter.class);*/
+		        .dispatcherTypeMatchers(DispatcherType.ERROR, DispatcherType.FORWARD).permitAll()
+		        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+		        .requestMatchers(HttpMethod.GET, "/**").permitAll()
+		        .anyRequest().hasAuthority("ADMIN"))
+		    .exceptionHandling(errors -> errors
+		        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+		        .accessDeniedHandler((request, response, denied) -> response.sendError(HttpServletResponse.SC_FORBIDDEN)))
+		    .addFilterBefore(new JWTAuthorizationFilter(), BasicAuthenticationFilter.class);
 
 		return http.build();
 	}
